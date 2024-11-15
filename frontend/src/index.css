@@ -1,91 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+:root {
+  --font-sora: "Sora", sans-serif;
+  --font-code: "Source Code Pro", monospace;
+  --font-grotesk: "Space Grotesk", sans-serif;
+  color-scheme: dark;
+}
 
-    --radius: 0.5rem;
-  }
+* {
+  scroll-behavior: smooth;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-black text-foreground;
+    @apply font-sans bg-n-8 text-n-1 text-base;
+    cursor: url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-arrow.svg) 0 0, pointer; /* Legacy */
+    cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-arrow.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-arrow2x.svg) 2x) 0 0, pointer; /* Webkit */
   }
 }
 
-@font-face {
-  font-family: "NeueMachina-100";
-  src: url("/fonts/NeueMachina-Light.otf") format("opentype");
+body {
+  cursor: url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-arrow.svg) 0 0, pointer; /* Legacy */
+  cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-arrow.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-arrow2x.svg) 2x) 0 0, pointer; /* Webkit */
 }
 
-@font-face {
-  font-family: "NeueMachina-400";
-  src: url("/fonts/NeueMachina-Regular.otf") format("opentype");
+button,
+.cursor-button,
+.eael-pricing-button,
+.gumroad-button
+.eael-creative-button,
+.cursor-pointer
+{
+  cursor: url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-button.svg) 4 0, pointer; /* Legacy */
+  cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-button.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-button2x.svg) 2x) 4 0, pointer; /* Webkit */
 }
 
-@font-face {
-  font-family: "NeueMachina-800";
-  src: url("/fonts/NeueMachina-Ultrabold.otf") format("opentype");
+a,
+button,
+.tab-button,
+.canvas-close-button,
+a.hfe-menu-item.elementor-button {
+  cursor: url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-button2.svg) 4 0, pointer; /* Legacy */
+  cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-button2.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-button22x.svg) 2x) 4 0, pointer; /* Webkit */
 }
 
-.scroller {
-  width: calc(100vw - 2rem) !important;
-  max-width: 900px;
-  margin-inline: auto;
-  padding-block: 30px;
-  border-radius: 10px;
-  color: black;
-  font-size: larger;
-  @apply bg-fuchsia-500 font-neueMachinaBold;
-}
-
-.inner-scroller {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.active-scroller {
-  width: 100%;
-  overflow: hidden;
-}
-
-.active-scroller .inner-scroller p {
-  white-space: nowrap;
-}
-
-.active-scroller .inner-scroller {
-  width: fit-content;
-  flex-wrap: nowrap;
-  animation: scroll 40s linear infinite;
-}
-
-@keyframes scroll {
-  to {
-    transform: translate(calc(-50% - 1.5rem));
-  }
+.scroll-side {
+  cursor: url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-scroll-side.svg) 14 9, pointer; /* Legacy */
+  cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-scroll-side.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-scroll-side2x.svg) 2x) 14 9, pointer; /* Webkit */
 }
