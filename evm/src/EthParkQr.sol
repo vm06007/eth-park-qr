@@ -8,6 +8,7 @@ error OnlyOwner(
 
 contract EthParkQr {
 
+    address owner;
     struct OrderData {
         address token;
         uint256 bahtAmount;
