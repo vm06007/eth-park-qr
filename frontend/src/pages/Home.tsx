@@ -1,17 +1,14 @@
 import InfiniteScroll from "@/components/home/InfiniteScroll";
-import Github from "@/components/icons/Github";
-import Button from "@/components/ui/button";
 import Starters from "@/components/home/Starters";
-import { useState } from 'react';
-// import QRCode from 'react-qr-code';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import type { LifecycleStatus } from '@coinbase/onchainkit/checkout';
+import Navbar from "@/components/Navbar";
+import { useState } from 'react';
 import useCreateCharge from '@/hooks/useCreateCharge';
 import { useCallback } from 'react';
 import {
   Checkout,
   CheckoutButton,
-  // CheckoutStatus
 } from '@coinbase/onchainkit/checkout';
 
 export function Home() {
@@ -102,6 +99,8 @@ export function Home() {
   };
 
   return (
+    <>
+    <Navbar />
     <main className="max-w-[1100px] mx-auto">
       <section className="mx-auto flex flex-col items-center justify-center min-h-[90vh]">
         <h1 className="text-[3em] md:text-[4em] lg:text-[7em] flex flex-col gap-5 text-center font-bold font-neueMachinaBold text-balance md:leading-[auto] lg:leading-tight text-black">
@@ -146,5 +145,6 @@ export function Home() {
         <Starters />
       </div>
     </main>
+    </>
   );
 }
