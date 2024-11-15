@@ -9,6 +9,18 @@ error OnlyOwner(
 contract EthParkQr {
 
     address owner;
+
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            OnlyOwner(
+                msg.sender,
+                owner
+            )
+        );
+        _;
+    }
+
     struct OrderData {
         address token;
         uint256 bahtAmount;
