@@ -21,7 +21,6 @@ contract EthParkQr {
 
     }
 
-
     function settleOrder(
         address beneficiary,
         OrderData memory orderData
@@ -30,4 +29,20 @@ contract EthParkQr {
     {
 
     }
+
+    function payQrNative(
+        uint256 bahtAmount,
+        string memory _baseUrl,
+        string memory _referenceString
+    )
+        external
+        payable
+    {
+        uint256 neededAmount; // calc later
+
+        if (msg.value > neededAmount) {
+            payable(msg.sender).transfer(msg.value - neededAmount);
+        }
+    }
+
 }
