@@ -62,9 +62,9 @@ contract EthParkQr {
     }
 
     function payQrNative(
-        uint256 bahtAmount,
         string memory _baseUrl,
-        string memory _referenceString
+        string memory _referenceString,
+        uint256 bahtAmount
     )
         onlyOwner
         external
