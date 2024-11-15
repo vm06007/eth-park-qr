@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coinbase/onchainkit": "^0.35.5",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@etherspot/prime-sdk": "^1.8.0",
     "@radix-ui/react-select": "^2.0.0",
