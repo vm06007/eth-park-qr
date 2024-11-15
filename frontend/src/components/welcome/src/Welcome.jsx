@@ -2,6 +2,7 @@
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import MyLogos from "./components/MyLogos";
+import Services from "./components/Services";
 import "./index.css";
 
 const Welcome = () => {
@@ -11,6 +12,7 @@ const Welcome = () => {
         <Header />
         <Hero />
         <MyLogos />
+        <Services />
       </div>
     </>
   );

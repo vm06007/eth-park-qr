@@ -13,7 +13,6 @@ import file02 from "./file-02.svg";
 import stars from "./stars.svg";
 import curve from "./hero/curve.png";
 import main from "./hero/main.png";
-
 import telegram from "./socials/telegram.svg";
 import twitter from "./socials/twitter.svg";
 
