@@ -2,6 +2,8 @@ import InfiniteScroll from "@/components/home/InfiniteScroll";
 import Github from "@/components/icons/Github";
 import Button from "@/components/ui/button";
 import Starters from "@/components/home/Starters";
+// import QRCode from 'react-qr-code';
+import { Scanner } from '@yudiel/react-qr-scanner';
 
 export function Home() {
   const scrollToTabs = () => {
@@ -26,6 +28,11 @@ export function Home() {
         <p className="text-[1.5em] md:text-[2em] mt-4 text-center font-bold">
           An introduction for building dApps on Bitcoin
         </p>
+        <Scanner
+          constraints={{ facingMode: 'environment' }}
+          onScan={(result) => {
+            console.log(result, 'result');
+        }}></Scanner>
         <div className="flex gap-5">
           <Button className="mt-10 mx-auto flex gap-2">
             <Github /> See code
