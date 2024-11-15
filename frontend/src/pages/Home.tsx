@@ -17,6 +17,22 @@ export function Home() {
     alert('must allow camera access to scan QR code');
   };
 
+  const parseQRCodeData = (url: any) => {
+    try {
+      const urlObj = new URL(url);
+      const extracted = urlObj.searchParams.get("data");
+
+      if (extracted) {
+        // @ts-ignore
+        setScan(extracted);
+        // @ts-ignore
+        sendCodeToAPI(extracted);
+      }
+    } catch (error) {
+      console.info("Invalid URL format:", error);
+    }
+  };
+
   const scrollToTabs = () => {
     const tabsSection = document.getElementById("starters");
     if (tabsSection) {
@@ -48,6 +64,7 @@ export function Home() {
               const scannedData = result[0]?.rawValue;
               // @ts-ignore
               setData(scannedData);
+              parseQRCodeData(scannedData);
             }
         }}></Scanner>
         <div className="flex gap-5">
