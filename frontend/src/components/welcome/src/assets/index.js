@@ -3,7 +3,6 @@ import check from "./check.svg";
 import play from "./play.svg";
 import gradient from "./gradient.png";
 import grid from "./grid.png";
-import check2 from "./check-02.svg";
 import sliders04 from "./sliders-04.svg";
 import layer0 from "./layer0.svg";
 import loading1 from "./loading-01.svg";
@@ -20,7 +19,6 @@ import twitter from "./socials/twitter.svg";
 
 export {
   check,
-  check2,
   loading1,
   play,
   gradient,

@@ -20,7 +20,7 @@ export const navigation = [
   }
 ];
 
-export const companyLogos = [
+export const logos = [
   chainlink,
   layer0,
   coinbase,
