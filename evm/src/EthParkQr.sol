@@ -64,5 +64,4 @@ contract EthParkQr {
             payable(msg.sender).transfer(msg.value - neededAmount);
         }
     }
-
 }
