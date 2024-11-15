@@ -17,6 +17,40 @@ export function Home() {
     alert('must allow camera access to scan QR code');
   };
 
+  const sendCodeToAPI = async (code: any) => {
+      // based on QR code data, send a request to the API
+      const response = await fetch("/api/Home/SaveProduct1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          { X: code }
+        ),
+      });
+      // this is the response from the API
+      // https://carpark.themall.co.th/?data={code_of_qr}
+      const data = await response.json();
+      setApiResponse(data);
+  };
+
+  const parseQRCodeData = (url: any) => {
+    console.log(url, 'url');
+    try {
+      const urlObj = new URL(url);
+      const extracted = urlObj.searchParams.get("data");
+
+      if (extracted) {
+        // @ts-ignore
+        setScan(extracted);
+        // @ts-ignore
+        sendCodeToAPI(extracted);
+      }
+    } catch (error) {
+      console.info("Invalid URL format:", error);
+    }
+  };
+
   const scrollToTabs = () => {
     const tabsSection = document.getElementById("starters");
     if (tabsSection) {
@@ -48,6 +82,7 @@ export function Home() {
               const scannedData = result[0]?.rawValue;
               // @ts-ignore
               setData(scannedData);
+              parseQRCodeData(scannedData);
             }
         }}></Scanner>
         <div className="flex gap-5">
