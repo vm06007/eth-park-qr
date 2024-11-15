@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: BKK
 pragma solidity =0.8.28;
 
 contract EthParkQr {
