@@ -5,12 +5,20 @@ import Starters from "@/components/home/Starters";
 import { useState } from 'react';
 // import QRCode from 'react-qr-code';
 import { Scanner } from '@yudiel/react-qr-scanner';
+import type { LifecycleStatus } from '@coinbase/onchainkit/checkout';
+import {
+  Checkout,
+  CheckoutButton,
+  // CheckoutStatus
+} from '@coinbase/onchainkit/checkout';
 
 export function Home() {
 
   const [data, setData] = useState(null);
   const [scan, setScan] = useState(null);
   const [apiResponse, setApiResponse] = useState(null);
+
+  const amount = 1;
 
   const handleError = (err: any) => {
     console.error(err);
@@ -89,6 +97,15 @@ export function Home() {
               parseQRCodeData(scannedData);
             }
         }}></Scanner>
+        <Checkout
+          key={amount}
+        >
+          <CheckoutButton
+            coinbaseBranded={true}
+            text="Pay with Crypto"
+            disabled={!amount}
+          />
+        </Checkout>
         <div className="flex gap-5">
           <Button className="mt-10 mx-auto flex gap-2">
             <Github /> See code

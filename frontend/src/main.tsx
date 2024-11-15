@@ -4,6 +4,7 @@ import App from "./App";
 import Providers from "./config/providers";
 import "./polyfills";
 import "@rainbow-me/rainbowkit/styles.css";
+import '@coinbase/onchainkit/styles.css';
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
