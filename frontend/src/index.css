@@ -16,3 +16,15 @@
 * {
   scroll-behavior: smooth;
 }
+
+.imger li:nth-child(5) img {
+  width: 175px;
+}
+
+.imger li:nth-child(2) img {
+  filter: invert(1);
+}
+
+.imger li:first-child img {
+  width: 160px;
+}
