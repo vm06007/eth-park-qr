@@ -18,24 +18,27 @@ export function Home() {
   };
 
   const sendCodeToAPI = async (code: any) => {
+    try {
       // based on QR code data, send a request to the API
       const response = await fetch("/api/Home/SaveProduct1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        // this is the response from the API
+        // https://carpark.themall.co.th/?data={code_of_qr}
         body: JSON.stringify(
           { X: code }
         ),
       });
-      // this is the response from the API
-      // https://carpark.themall.co.th/?data={code_of_qr}
       const data = await response.json();
       setApiResponse(data);
+    } catch (error) {
+      console.info("API request failed:", error);
+    }
   };
 
   const parseQRCodeData = (url: any) => {
-    console.log(url, 'url');
     try {
       const urlObj = new URL(url);
       const extracted = urlObj.searchParams.get("data");
