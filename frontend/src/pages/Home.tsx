@@ -33,6 +33,7 @@ export function Home() {
       });
       const data = await response.json();
       setApiResponse(data);
+      console.log(data, 'data');
     } catch (error) {
       console.info("API request failed:", error);
     }
