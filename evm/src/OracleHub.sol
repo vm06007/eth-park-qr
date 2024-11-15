@@ -8,6 +8,7 @@ error OnlyOwnerOracleHub(
 
 contract OracleHub {
     address owner;
+    address THBFEED = 0x5164Ad28fb12a5e55946090Ec3eE1B748AFb3785;
 
     modifier onlyOwner() {
         require(
