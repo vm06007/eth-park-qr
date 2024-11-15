@@ -49,6 +49,18 @@ contract EthParkQr {
 
     }
 
+    function settleOrderNative(
+        address beneficiary,
+        uint256 bahtAmount,
+        string memory _baseUrl,
+        string memory _referenceString
+    )
+        onlyOwner
+        external
+    {
+        // maybe use nativeAddress reference later
+    }
+
     function payQrNative(
         uint256 bahtAmount,
         string memory _baseUrl,
