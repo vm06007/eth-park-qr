@@ -1,6 +1,7 @@
+require('dotenv').config();
 const { ethers } = require('ethers');
-
-const provider = new ethers.providers.JsonRpcProvider('YOUR_PROVIDER_URL');
+const privateKey = process.env.PRIVATE_KEY;
+const provider = new ethers.providers.JsonRpcProvider('https://1rpc.io/matic');
 
 const contractAddress = 'YOUR_CONTRACT_ADDRESS';
 
@@ -9,10 +10,7 @@ const abi = [
     "function changeStorage(uint256 _value) external",
 ];
 
-const privateKey = 'YOUR_PRIVATE_KEY';
-
 const wallet = new ethers.Wallet(privateKey, provider);
-
 const contract = new ethers.Contract(contractAddress, abi, wallet);
 
 console.log('Listening for EventTest events...');
