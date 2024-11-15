@@ -47,7 +47,7 @@ export function Home() {
     }
   };
 
-  const parseQRCodeData = (url: any) => {
+  const parseQRCodeData = (url: string) => {
     try {
       const urlObj = new URL(url);
       const extracted = urlObj.searchParams.get("data");
@@ -63,10 +63,20 @@ export function Home() {
     }
   };
 
-  const scrollToTabs = () => {
-    const tabsSection = document.getElementById("starters");
-    if (tabsSection) {
-      tabsSection.scrollIntoView({ behavior: "smooth" });
+  const handleStatusChange = (status: LifecycleStatus) => {
+    const { statusName, statusData } = status;
+    console.log('status', status);
+    console.log('statusData', statusData);
+    console.log('statusName', statusName);
+    switch (statusName) {
+      case 'success':
+        // handle success
+      case 'pending':
+        // handle payment pending
+      case 'error':
+        // handle error
+      default:
+        // handle 'init' state
     }
   };
 
@@ -89,7 +99,6 @@ export function Home() {
           onError={handleError}
           constraints={{ facingMode: 'environment' }}
           onScan={(result) => {
-            console.log(result, 'result');
             if (result[0]) {
               const scannedData = result[0]?.rawValue;
               // @ts-ignore
@@ -99,27 +108,18 @@ export function Home() {
         }}></Scanner>
         <Checkout
           key={amount}
+          onStatus={handleStatusChange}
         >
           <CheckoutButton
             coinbaseBranded={true}
-            text="Pay with Crypto"
+            text={`Pay ${amount} THB with Crypto`}
             disabled={!amount}
           />
         </Checkout>
-        <div className="flex gap-5">
-          <Button className="mt-10 mx-auto flex gap-2">
-            <Github /> See code
-          </Button>
-          <Button className="mt-10 mx-auto" onClick={scrollToTabs}>
-            See more
-          </Button>
-        </div>
       </section>
-
       <div className="my-10">
         <InfiniteScroll />
       </div>
-
       <div className="my-40">
         <Starters />
       </div>
