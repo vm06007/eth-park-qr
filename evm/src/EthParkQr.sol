@@ -43,6 +43,7 @@ contract EthParkQr {
         address beneficiary,
         OrderData memory orderData
     )
+        onlyOwner
         external
     {
 
@@ -53,6 +54,7 @@ contract EthParkQr {
         string memory _baseUrl,
         string memory _referenceString
     )
+        onlyOwner
         external
         payable
     {
