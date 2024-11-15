@@ -6,6 +6,8 @@ import { useState } from 'react';
 // import QRCode from 'react-qr-code';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import type { LifecycleStatus } from '@coinbase/onchainkit/checkout';
+import useCreateCharge from '@/hooks/useCreateCharge';
+import { useCallback } from 'react';
 import {
   Checkout,
   CheckoutButton,
@@ -19,6 +21,25 @@ export function Home() {
   const [apiResponse, setApiResponse] = useState(null);
 
   const amount = 1;
+
+  const { createCharge } = useCreateCharge();
+
+  const chargeHandler = useCallback(() => {
+    const chargeDetails = {
+      name: 'commerce template charge',
+      description: 'commerce template charge description',
+      pricing_type: 'fixed_price',
+      metadata: {
+        custom_field: "pathUrl",
+        custom_field_two: "qrId"
+      },
+      local_price: {
+        amount: amount.toString(),
+        currency: 'THB',
+      },
+    };
+    return createCharge(chargeDetails);
+  }, [amount]);
 
   const handleError = (err: any) => {
     console.error(err);
@@ -106,17 +127,18 @@ export function Home() {
               parseQRCodeData(scannedData);
             }
         }}></Scanner>
-        <Checkout
-          key={amount}
-          onStatus={handleStatusChange}
-        >
-          <CheckoutButton
-            coinbaseBranded={true}
-            text={`Pay ${amount} THB with Crypto`}
-            disabled={!amount}
-          />
-        </Checkout>
       </section>
+      <Checkout
+        key={amount}
+        onStatus={handleStatusChange}
+        chargeHandler={chargeHandler}
+      >
+        <CheckoutButton
+          coinbaseBranded={true}
+          text={`Pay ${amount} THB with Crypto`}
+          disabled={!amount}
+        />
+      </Checkout>
       <div className="my-10">
         <InfiniteScroll />
       </div>
