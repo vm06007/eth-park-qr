@@ -16,7 +16,7 @@ contract OracleHub {
                 msg.sender,
                 owner
             )
-        ),
+        )
         _;
     }
 
