@@ -118,8 +118,8 @@ contract EthParkQr is Owner {
     }
 
     receive()
-    external
-    payable {}
+        external
+        payable {}
 
     function payQR(
         address _token,
