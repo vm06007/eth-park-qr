@@ -104,14 +104,6 @@ contract EthParkQr is Owner {
     )
         external
     {
-        OrderData memory orderData = OrderData(
-            token,
-            bahtAmount,
-            0,
-            _baseUrl,
-            _referenceString
-        );
-
         _payQr(
             token,
             bahtAmount,
