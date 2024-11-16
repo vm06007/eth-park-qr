@@ -114,6 +114,11 @@ contract EthParkQr is Owner {
             _baseUrl,
             _referenceString
         );
+
+        uint256 actualTokenAmount = ORACLE_HUB_INSTANCE.getTokenEquivalent(
+            _token,
+            _bahtAmount
+        );
     }
 
     function _payQr(
