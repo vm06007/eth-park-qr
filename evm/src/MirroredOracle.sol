@@ -98,6 +98,12 @@ contract MirroredOracle is Owner {
             uint80
         )
     {
-        return (0, 0, 0, 0, 0);
+        return (
+            _returnRoundData(
+                roundId,
+                roundInfo[roundId]
+            )
+        );
+    }
     }
 }
