@@ -235,6 +235,13 @@ contract EthParkQr is Owner {
         data.tokenAmountIssued = data.tokenAmountIssued
             + tokenAmountToIssue;
 
+        emit OrderSettled(
+            data.tokenAddress,
+            data.tokenAmountTotal,
+            data.bahtAmountTotal,
+            _orderDataHash
+        );
+
         if (_isNative == true) {
             payable(_beneficiary).transfer(
                 tokenAmountToIssue
