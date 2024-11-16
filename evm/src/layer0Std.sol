@@ -63,6 +63,18 @@ contract MyOapp is OApp, RoundInfoContract {
         );
     }
 
+    function encodeRoundData(
+        RoundInfo memory _data
+    )
+        public
+        pure
+        returns (bytes memory)
+    {
+        return abi.encode(
+            _data
+        );
+    }
+
     function send(
         uint32 _dstEid,
         string memory _message,
