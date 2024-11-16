@@ -5,6 +5,10 @@ import {
     Owner
 } from "./Owner.sol";
 
+error OnlyFriendlyBot(
+    address sender
+);
+
 contract MirroredOracle is Owner {
 
     function latestAnswer()
