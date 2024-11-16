@@ -78,6 +78,15 @@ contract EthParkQr is Owner {
             token,
             bahtAmount
         );
+
+        OrderData memory orderData = OrderData(
+            token,
+            bahtAmount,
+            getTokenAmountFromBaht,
+            _baseUrl,
+            _referenceString
+        );
+
         IERC20(token).transferFrom(
             msg.sender,
             address(this),
