@@ -88,6 +88,7 @@ export const latest = [
 const Latest = () => {
 
   const [latestEvents, setLatestEvents] = useState([]);
+  const [monitoring, setMonitoring] = useState(false);
   const [monitorMessage, setMonitorMessage] = useState("");
 
   const {
@@ -106,23 +107,23 @@ const Latest = () => {
       const contract = new ethers.Contract(contracts[chainId].address, abi, provider);
       const block = await provider.getBlockNumber();
 
-      // Fetch the latest 5 Transfer events from recent blocks
       const events = await contract.queryFilter(
-        contract.filters.Transfer(),
-        block - 100,
-        block
+        contract.filters.PaymentUpdated(),
+        64350494, // from
+        'latest' // to
       );
 
       const recentEvents = await Promise.all(
         events.slice(-5).map(async (event, i) => {
           const blockDetails = await provider.getBlock(event.blockNumber);
+        events.slice(-6).map(async (event, i) => {
           const date = new Date(blockDetails.timestamp * 1000).toLocaleString();
 
+            paid = "done";
           return {
             id: event.transactionHash,
             date,
             title: latest[i] && latest[i].title,
-            text: `From: ${event.args.from} To: ${event.args.to} Amount: ${ethers.utils.formatEther(event.args.value)}`,
             status: "done",
             txHash: event.transactionHash,
           };
