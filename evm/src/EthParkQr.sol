@@ -86,6 +86,12 @@ contract EthParkQr is Owner {
         onlyOwner
         external
     {
+    function _settleOrder(
+        address beneficiary,
+        OrderData memory orderData
+    )
+        internal
+    {
 
     }
 
