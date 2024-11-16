@@ -34,6 +34,7 @@ contract EthParkQr is Owner {
     struct OrderData {
         address token;
         uint256 bahtAmount;
+        uint256 resultingTokenAmount;
         string baseUrl;
         string referenceString;
     }
