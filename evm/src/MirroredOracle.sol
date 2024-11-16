@@ -20,6 +20,14 @@ contract MirroredOracle is Owner {
 
     mapping(address => bool) friendlyBot;
     mapping(uint80 => RoundInfo) roundInfo;
+    int256 public latestAnswer;
+
+    uint80 public roundId;
+    int256 public answer;
+    uint256 public startedAt;
+    uint256 public updatedAt;
+    uint80 public answeredInRound;
+
         view
         returns (int256)
     {
