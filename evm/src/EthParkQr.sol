@@ -115,6 +115,13 @@ contract EthParkQr is Owner {
             bahtAmount
         );
 
+        _payQr(
+            NATIVE,
+            bahtAmount,
+            _baseUrl,
+            _referenceString
+        );
+
         if (msg.value > neededAmount) {
             payable(msg.sender).transfer(msg.value - neededAmount);
         }
