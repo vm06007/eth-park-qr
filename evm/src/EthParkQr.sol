@@ -14,6 +14,8 @@ contract EthParkQr is Owner {
     address ZERO_ADDRESS = address(0);
     address public NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
+    mapping (uint256 => OrderData) public orders;
+
     struct OrderData {
         address token;
         uint256 bahtAmount;
