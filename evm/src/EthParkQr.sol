@@ -14,6 +14,7 @@ import {
 } from "./interfaces/IOracleHub.sol";
 
 error OnlyFriendlyBot();
+error InsufficientFunds();
 
 contract EthParkQr is Owner {
 
