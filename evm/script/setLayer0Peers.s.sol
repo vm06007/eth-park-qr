@@ -47,8 +47,8 @@ contract setLayer0Peers is Script {
             );
 
         uint32 eid = block.chainid == 137
-            ? 30109
-            : 30110;
+            ? 30110
+            : 30109;
 
         myOapp.setPeer(
             eid,
