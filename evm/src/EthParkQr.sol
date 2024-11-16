@@ -82,6 +82,16 @@ contract EthParkQr is Owner {
         );
     }
 
+    function changeFriendlyBotStatus(
+        address _botAddress,
+        bool _status
+    )
+        onlyOwner
+        external
+    {
+        friendlyBot[_botAddress] = _status;
+    }
+
     function payQr(
         address token,
         uint256 bahtAmount,
