@@ -32,6 +32,20 @@ contract MyOapp is OApp, RoundInfoContract {
         0
     );
 
+    function addressToBytes32(
+        address _addr
+    )
+        public
+        pure
+        returns (bytes32)
+    {
+        return bytes32(
+            uint256(
+                uint160(_addr)
+            )
+        );
+    }
+
     function send(
         uint32 _dstEid,
         string memory _message,
