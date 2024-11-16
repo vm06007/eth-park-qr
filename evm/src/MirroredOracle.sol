@@ -45,7 +45,16 @@ contract MirroredOracle is Owner {
         );
     }
 
-    function getRoundData()
+    function changeBotStatus(
+        address _botAddress,
+        bool _status
+    )
+        external
+        onlyOwner
+    {
+        friendlyBot[_botAddress] = _status;
+    }
+
         external
         view
         returns (
