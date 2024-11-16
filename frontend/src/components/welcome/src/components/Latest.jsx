@@ -222,12 +222,6 @@ const Latest = () => {
       setMonitoring(true);
       setMonitorMessage("Starting balance monitoring...");
 
-      setLatestEvents((prevEvents) =>
-        prevEvents.map((event) =>
-          event.orderId === orderId ? { ...event, status: "done" } : event
-        )
-      );
-
       try {
         for (let i = 0; i < 60; i++) {
 
