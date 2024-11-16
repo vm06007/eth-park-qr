@@ -209,7 +209,7 @@ contract EthParkQr is Owner {
         external
         payable
     {
-        uint256 neededAmount = ORACLE_HUB_INSTANCE.getTokenAmount(
+        uint256 neededAmount = ORACLE_HUB_INSTANCE.getTokenEquivalent(
             NATIVE,
             bahtAmount
         );
