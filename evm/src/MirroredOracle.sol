@@ -105,5 +105,27 @@ contract MirroredOracle is Owner {
             )
         );
     }
+
+    function _returnRoundData(
+        uint80 _roundId,
+        RoundInfo memory _roundInfo
+    )
+        private
+        pure
+        returns (
+            uint80,
+            int256,
+            uint256,
+            uint256,
+            uint80
+        )
+    {
+        return (
+            _roundId,
+            _roundInfo.answer,
+            _roundInfo.startedAt,
+            _roundInfo.updatedAt,
+            _roundInfo.answeredInRound
+        );
     }
 }
