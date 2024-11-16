@@ -9,7 +9,7 @@ import {MyOapp} from "../src/layer0Std.sol";
 contract layer0DeployScript is Script {
     MyOapp public myOapp;
     address endPoint;
-    address deployer = 0xEF034b79E30c21fBabab836b34f4b3ae3e0130a8;
+    address deployer = vm.envAddress("DEPLOYER");
 
     function setUp()
         public
