@@ -90,7 +90,7 @@ contract EthParkQr is Owner {
         );
     }
 
-    function getKeccack256(
+    function getHash(
         OrderData memory _orderData
     )
         public
@@ -107,7 +107,7 @@ contract EthParkQr is Owner {
         );
     }
 
-    function changeFriendlyBotStatus(
+    function changeBotStatus(
         address _botAddress,
         bool _status
     )
@@ -121,7 +121,7 @@ contract EthParkQr is Owner {
     external
     payable {}
 
-    function payQr(
+    function payQR(
         address _token,
         uint256 _bahtAmount,
         string memory _baseUrl,
@@ -129,7 +129,7 @@ contract EthParkQr is Owner {
     )
         external
     {
-        _payQr(
+        _payQR(
             _token,
             _bahtAmount,
             _baseUrl,
@@ -139,7 +139,7 @@ contract EthParkQr is Owner {
         IERC20(_token).transferFrom(
             msg.sender,
             address(this),
-            _payQr(
+            _payQR(
                 _token,
                 _bahtAmount,
                 _baseUrl,
@@ -148,7 +148,7 @@ contract EthParkQr is Owner {
         );
     }
 
-    function _payQr(
+    function _payQR(
         address _token,
         uint256 _bahtAmount,
         string memory _baseUrl,
@@ -164,7 +164,7 @@ contract EthParkQr is Owner {
             msg.sender
         );
 
-        bytes32 orderDataHash = getKeccack256(
+        bytes32 orderDataHash = getHash(
             orderData
         );
 
@@ -192,21 +192,21 @@ contract EthParkQr is Owner {
         );
     }
 
-    function settleOrder(
+    function settleQROrder(
         address _beneficiary,
         bytes32 _orderDataHash
     )
         onlyFriendlyBot
         external
     {
-        _settleOrder(
+        _settleQROrder(
             _beneficiary,
             _orderDataHash,
             false
         );
     }
 
-    function _settleOrder(
+    function _settleQROrder(
         address _beneficiary,
         bytes32 _orderDataHash,
         bool _isNative
@@ -266,14 +266,14 @@ contract EthParkQr is Owner {
         );
     }
 
-    function settleOrderNative(
+    function settleQROrderNative(
         address _beneficiary,
         bytes32 _orderDataHash
     )
         onlyFriendlyBot
         external
     {
-        _settleOrder(
+        _settleQROrder(
             _beneficiary,
             _orderDataHash,
             true
@@ -299,7 +299,7 @@ contract EthParkQr is Owner {
             InsufficientFunds()
         );
 
-        _payQr(
+        _payQR(
             NATIVE,
             _bahtAmount,
             _baseUrl,
