@@ -214,6 +214,10 @@ contract EthParkQr is Owner {
             NATIVE,
             _bahtAmount
         );
+
+        require(
+            msg.value >= actualTokenAmount,
+            InsufficientFunds()
         );
 
         _payQr(
