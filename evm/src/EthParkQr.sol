@@ -65,6 +65,21 @@ contract EthParkQr is Owner {
         );
     }
 
+    function getKeccack256(
+        OrderData memory _orderData
+    )
+        public
+        pure
+        returns(bytes32)
+    {
+        return keccak256(
+            abi.encodePacked(
+                _orderData.baseUrl,
+                _orderData.referenceString,
+                _orderData.tokenAddress,
+                _orderData.creator
+            )
+        );
     }
 
     function payQr(
