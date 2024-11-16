@@ -47,6 +47,8 @@ contract EthParkQr is Owner {
             _baseUrl,
             _referenceString
         );
+
+        orderCountByAddress[msg.sender]++;
     }
 
     function _payQr(
