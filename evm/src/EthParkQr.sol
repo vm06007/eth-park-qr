@@ -28,6 +28,13 @@ contract EthParkQr is Owner {
         uint256 tokenAmountIssued;
     }
 
+    struct OrderData {
+        string baseUrl;
+        string referenceString;
+        address tokenAddress;
+        address creator;
+    }
+
     mapping(bytes32 => Amounts) public amountsFromOrder;
     mapping(address => bool) public friendlyBot;
 
@@ -58,12 +65,6 @@ contract EthParkQr is Owner {
         );
     }
 
-    struct OrderData {
-        address token;
-        uint256 bahtAmount;
-        uint256 resultingTokenAmount;
-        string baseUrl;
-        string referenceString;
     }
 
     function payQr(
