@@ -17,6 +17,16 @@
   scroll-behavior: smooth;
 }
 
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 256px;
+  padding: 50px;
+  font-size: 25px;
+  padding-top: 10px;
+}
+
 .imger li:nth-child(5) img {
   width: 175px;
 }

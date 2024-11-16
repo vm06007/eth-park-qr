@@ -89,9 +89,11 @@ const shortenHash = (hash, length = 6) => {
 
 const Latest = () => {
 
+  const seconds = 60;
   const [latestEvents, setLatestEvents] = useState([]);
   const [monitoring, setMonitoring] = useState(false);
   const [monitorMessage, setMonitorMessage] = useState("");
+  const [countdown, setCountdown] = useState(seconds);
 
   const {
     chain,
@@ -219,14 +221,18 @@ const Latest = () => {
     : "#";
 
     const monitorBalance = async (orderId) => {
+
+      setCountdown(seconds);
       setMonitoring(true);
       setMonitorMessage("Starting balance monitoring...");
 
       try {
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < seconds; i++) {
 
           await new Promise((resolve) => setTimeout(resolve, 1000)); // 1-second delay
+
           console.log("Checking balance...");
+          setCountdown((prev) => prev - 1);
 
           const response = await fetch("/api/Home/SaveProduct1", {
             method: "POST",
@@ -247,11 +253,14 @@ const Latest = () => {
               // Update the status of the corresponding entry
               setLatestEvents((prevEvents) =>
                 prevEvents.map((event) =>
-                  event.orderId === orderId ? { ...event, status: "done" } : event
+                  event.orderId === orderId
+                    ? { ...event, status: "done" }
+                    : event
                 )
               );
 
               setMonitoring(false);
+              setCountdown(0);
               // CALL BOT TO RELEASE THE CRYPTO FROM CONTRACT
               return;
             }
@@ -259,8 +268,8 @@ const Latest = () => {
             console.error(`Error checking balance: ${response.statusText}`);
           }
         }
-        console.log('Balance did not reach zero within 60 seconds.');
-        setMonitorMessage("Balance did not reach zero within 60 seconds.");
+        console.log(`Balance did not reach zero within ${seconds} seconds.`);
+        setMonitorMessage(`Balance did not reach zero within ${seconds} seconds.`);
       } catch (error) {
         console.error("Error monitoring balance:", error);
         setMonitorMessage("Error occurred during balance monitoring.");
@@ -352,18 +361,23 @@ const Latest = () => {
                     <div>
                     <div style={{transform: "scale(1.3)", marginLeft: "35px"}}>
                     <Button onClick={() => monitorBalance(item.orderId)}>
-                      Click Settle QR Payment {}
+                      Click To Settle QR Payment {}
                     </Button>
                     </div>
                     {monitoring && (
                       <>
                         <br></br>
-                        <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
-                          Scan To Settle In 60 Seconds
-                        </a>
+                        <div className="flex" style={{flexDirection: "row-reverse"}}>
+                        <span className="counter">
+                          <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
+                            Scan To Settle In {countdown} seconds
+                          </a>
+                        </span>
                         {(item.qrURL) && (
                           <QRCode value={item.qrURL} />
                         )}
+                        </div>
+                        <br></br>
                         {monitorMessage}
                       </>
                     )}
