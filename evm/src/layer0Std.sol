@@ -46,6 +46,23 @@ contract MyOapp is OApp, RoundInfoContract {
         );
     }
 
+    function quote(
+        uint32 _dstEid,
+        bytes memory _message,
+        bool _payInLzToken
+    )
+        public
+        view
+        returns (MessagingFee memory fee)
+    {
+        fee = _quote(
+            _dstEid,
+            _message,
+            options,
+            _payInLzToken
+        );
+    }
+
     function send(
         uint32 _dstEid,
         string memory _message,
