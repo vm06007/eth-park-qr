@@ -23,6 +23,8 @@ contract EthParkQr is Owner {
 
     mapping(address => uint256) public orderCountByAddress;
     mapping(uint256 => mapping(address => OrderData)) public orderBalances;
+    mapping(address => bool) public friendlyBot;
+
 
     constructor(
         address _oracleHubAddress
