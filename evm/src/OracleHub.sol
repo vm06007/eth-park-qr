@@ -7,6 +7,9 @@ import {
 
 contract OracleHub is Owner {
     address THBFEED = 0x5164Ad28fb12a5e55946090Ec3eE1B748AFb3785;
+    mapping(address => address) public tokenPriceFeeds;
+    address public thbUsdPriceFeedAddress;
+    address public constant NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     constructor() {
         owner = msg.sender;
