@@ -5,18 +5,19 @@ import Button from "./Button";
 import Heading from "./Heading";
 import Section from "./Sections";
 import Tagline from "./Tagline";
+import QRCode from 'react-qr-code';
 import { check, grid, loading1, gradient } from "../assets";
 
 const contracts = {
-  1: { // Ethereum Mainnet
+  1: { // Ethereum Mainnet (USDC contract)
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     explorer: "https://eth.blockscout.com/",
   },
-  137: { // Polygon Mainnet
-    address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  137: { // Polygon Mainnet (Actual PayQRContract)
+    address: "0x1fC490c7FD8716A9d20232B6871951e674841b4a",
     explorer: "https://polygon.blockscout.com/",
   },
-  8453: { // Base Mainnet
+  8453: { // Base Mainnet (USDC contract)
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     explorer: "https://base.blockscout.com/",
   },
@@ -24,7 +25,11 @@ const contracts = {
 
 // Define contract ABI (same for all chains)
 const abi = [
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
+  "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
+];
+
+const abiActual = [
+  "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
 ];
 
 // Dummy Data for now
@@ -35,7 +40,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 11:23pm",
     status: "done",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
     colorful: true,
   },
   {
@@ -44,7 +49,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "2",
@@ -52,7 +57,6 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
   },
   {
     id: "3",
@@ -60,7 +64,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "4",
@@ -68,13 +72,22 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
+  },
+  {
+    id: "4",
+    title: "7กณ574 @ EmQuartier",
+    text: "Details about the parking",
+    date: "November 15, 2024 10:23pm",
+    status: "progress",
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
 ];
 
 const Latest = () => {
 
   const [latestEvents, setLatestEvents] = useState([]);
+  const [monitorMessage, setMonitorMessage] = useState("");
 
   const {
     chain,
