@@ -18,7 +18,7 @@ contract SendMirrorOracleMessageScript is Script {
 
     using OptionsBuilder for bytes;
     bytes public options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(
-        50000,
+        200000,
         0
     );
 
@@ -92,7 +92,7 @@ contract SendMirrorOracleMessageScript is Script {
 
             uint32 eid = uint32(
                 vm.envUint(
-                    "EID_POLYGON"
+                    "EID_ARBITRUM"
                 )
             );
 
@@ -107,7 +107,7 @@ contract SendMirrorOracleMessageScript is Script {
             );
 
             myOapp.send{
-                value: fee.nativeFee
+                value: fee.nativeFee * 4
             }(
                 eid,
                 message,
