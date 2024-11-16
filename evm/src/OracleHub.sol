@@ -19,14 +19,23 @@ contract OracleHub is Owner {
 
     }
 
-    function addFeed(
-        address tokenAddress,
-        address oracle
+    function getLatestPrice(
+        address priceFeedAddress
     )
-        onlyOwner
-        external
+        internal
+        view
+        returns (uint256 price)
     {
+        (, int256 answer, , , ) = AggregatorV3Interface(priceFeedAddress).latestRoundData();
 
+        require(
+            answer > 0,
+            InvalidPrice()
+        );
+
+        return uint256(
+            answer
+        );
     }
 
     function setTokenPriceFeed(
