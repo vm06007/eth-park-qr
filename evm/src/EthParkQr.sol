@@ -23,6 +23,13 @@ contract EthParkQr is Owner {
 
     mapping(address => uint256) public orderCountByAddress;
     mapping(uint256 => mapping(address => OrderData)) public orderBalances;
+    struct Amounts {
+        address tokenAddress;
+        uint256 tokenAmountTotal;
+        uint256 bahtAmountTotal;
+        uint256 tokenAmountIssued;
+    }
+
     mapping(address => bool) public friendlyBot;
 
     modifier onlyFriendlyBot() {
