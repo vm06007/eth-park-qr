@@ -97,8 +97,8 @@ contract EthParkQr is Owner {
     payable {}
 
     function payQr(
-        address token,
-        uint256 bahtAmount,
+        address _token,
+        uint256 _bahtAmount,
         string memory _baseUrl,
         string memory _referenceString
     )
