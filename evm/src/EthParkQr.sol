@@ -59,7 +59,10 @@ contract EthParkQr is Owner {
     )
         internal
     {
-
+        uint256 getTokenAmountFromBaht = ORACLE_HUB_INSTANCE.getTokenAmount(
+            token,
+            bahtAmount
+        );
     }
 
     function settleOrder(
