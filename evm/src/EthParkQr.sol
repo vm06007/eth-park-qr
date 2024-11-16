@@ -78,6 +78,11 @@ contract EthParkQr is Owner {
             token,
             bahtAmount
         );
+        IERC20(token).transferFrom(
+            msg.sender,
+            address(this),
+            getTokenAmountFromBaht
+        );
     }
 
     function settleOrder(
