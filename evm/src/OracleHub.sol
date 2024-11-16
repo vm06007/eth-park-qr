@@ -48,4 +48,14 @@ contract OracleHub is Owner {
         returns (uint256 tokenAmount)
     {
     }
+
+    function getDecimals(
+        address priceFeedAddress
+    )
+        internal
+        view
+        returns (uint8 decimals)
+    {
+        decimals = AggregatorV3Interface(priceFeedAddress).decimals();
+    }
 }
