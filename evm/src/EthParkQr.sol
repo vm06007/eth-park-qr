@@ -28,6 +28,7 @@ contract EthParkQr is Owner {
         uint256 tokenAmountIssued;
     }
 
+    mapping(bytes32 => Amounts) public amountsFromOrder;
     mapping(address => bool) public friendlyBot;
 
     modifier onlyFriendlyBot() {
