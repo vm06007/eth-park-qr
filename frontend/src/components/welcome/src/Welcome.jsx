@@ -5,6 +5,7 @@ import MyLogos from "./components/MyLogos";
 import Services from "./components/Services";
 import Latest from "./components/Latest";
 import Team from "./components/Team";
+import Footer from "./components/Footer";
 import "./index.css";
 
 const Welcome = () => {
@@ -17,6 +18,7 @@ const Welcome = () => {
         <Services />
         <Latest />
         <Team />
+        <Footer />
       </div>
     </>
   );

@@ -16,7 +16,7 @@ export const navigation = [
   {
     id: "1",
     title: "Latest Payments",
-    url: "#roadmap",
+    url: "#latest-payments",
   }
 ];
 
@@ -30,15 +30,15 @@ export const logos = [
 
 export const socials = [
   {
-    id: "1",
+    id: "0",
     title: "Twitter",
     iconUrl: twitter,
-    url: "#",
+    url: "https://x.com/EthVitally",
   },
   {
-    id: "3",
+    id: "1",
     title: "Telegram",
     iconUrl: telegram,
-    url: "#",
+    url: "https://t.me/EthVitally",
   },
 ];
