@@ -124,7 +124,7 @@ contract EthParkQr is Owner {
                 _bahtAmount,
                 _baseUrl,
                 _referenceString
-            );
+            )
         );
     }
 
