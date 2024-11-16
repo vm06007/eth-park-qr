@@ -190,7 +190,50 @@ contract EthParkQr is Owner {
     )
         internal
     {
+        Amounts storage data = amountsFromOrder[_orderDataHash];
 
+        require(
+            data.tokenAddress != ZERO_ADDRESS,
+            OrderDoesntAlreadyExist()
+        );
+
+        bool tokenMatches = _isNative == true
+            ? data.tokenAddress == NATIVE
+            : data.tokenAddress != NATIVE;
+
+        require(
+            tokenMatches,
+            TokenMismatch(
+                _isNative == true
+                    ? NATIVE
+                    : data.tokenAddress,
+                data.tokenAddress
+            )
+        );
+
+        require(
+            data.tokenAmountIssued < data.tokenAmountTotal,
+            AlreadyPaidInFull()
+        );
+
+        uint256 tokenAmountToIssue = data.tokenAmountTotal
+         - data.tokenAmountIssued;
+
+        data.tokenAmountIssued = data.tokenAmountIssued
+            + tokenAmountToIssue;
+
+        if (_isNative == true) {
+            payable(_beneficiary).transfer(
+                tokenAmountToIssue
+            );
+
+            return;
+        }
+
+        IERC20(data.tokenAddress).transfer(
+            _beneficiary,
+            tokenAmountToIssue
+        );
     }
 
     function settleOrderNative(
