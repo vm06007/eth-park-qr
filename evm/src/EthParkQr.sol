@@ -17,6 +17,7 @@ contract EthParkQr is Owner {
 
     address ZERO_ADDRESS = address(0);
     address public NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    IOracleHub public immutable ORACLE_HUB_INSTANCE;
 
     mapping(address => uint256) public orderCountByAddress;
     mapping(uint256 => mapping(address => OrderData)) public orderBalances;
