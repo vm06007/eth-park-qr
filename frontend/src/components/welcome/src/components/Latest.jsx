@@ -94,9 +94,11 @@ const Latest = () => {
   const [monitoring, setMonitoring] = useState(false);
   const [monitorMessage, setMonitorMessage] = useState("");
   const [countdown, setCountdown] = useState(seconds);
+  let diff = 0;
 
   const {
     chain,
+    address
     // isConnected
   } = useAccount();
 
@@ -130,12 +132,16 @@ const Latest = () => {
     }
 
     try {
-      const contract = new ethers.Contract(contracts[chainId].address, abi, provider);
-      const block = await provider.getBlockNumber();
+      const contract = new ethers.Contract(
+        contracts[chainId].address,
+        abi,
+        provider
+      );
+      // const block = await provider.getBlockNumber();
       // Fetch the latest PaymentUpdated events
       const events = await contract.queryFilter(
         contract.filters.PaymentUpdated(),
-        64350494, // from
+        64357300, // from
         'latest' // to
       );
 
@@ -150,10 +156,14 @@ const Latest = () => {
           const date = new Date(blockDetails.timestamp * 1000).toLocaleString();
 
           // Fetch the mapping data for the event's orderDataHash
-          const orderData = await contract.amountsFromOrder(event.args.orderDataHash);
+          console.log(event.args.orderDataHash, 'orderDataHash');
+          const orderData = await contract.amountsFromOrder(
+            event.args.orderDataHash
+          );
 
           const tokenAmountTotal = ethers.BigNumber.from(orderData.tokenAmountTotal);
           const tokenAmountIssued = ethers.BigNumber.from(orderData.tokenAmountIssued);
+          diff = tokenAmountTotal.sub(tokenAmountIssued);
 
           let paid = tokenAmountTotal.gt(tokenAmountIssued)
             ? "awaiting"
@@ -194,7 +204,10 @@ const Latest = () => {
 
     const handleChainChanged = async () => {
       // await fetchChainId(provider);
-      await fetchEvents(provider, chain?.id);
+      await fetchEvents(
+        provider,
+        chain?.id
+      );
     };
 
     window.ethereum.on("chainChanged", handleChainChanged);
@@ -220,11 +233,11 @@ const Latest = () => {
     ? `${contracts[chain?.id].explorer}/tx/`
     : "#";
 
-    const monitorBalance = async (orderId) => {
+    const monitorBalance = async (orderId, orderHash) => {
 
       setCountdown(seconds);
       setMonitoring(true);
-      setMonitorMessage("Starting balance monitoring...");
+      setMonitorMessage(`Starting balance monitoring... If settled you will receive ${diff} `);
 
       try {
         for (let i = 0; i < seconds; i++) {
@@ -246,7 +259,7 @@ const Latest = () => {
             console.log(data);
             console.log(outstanding_balance, 'outstanding balance');
 
-            if (outstanding_balance === 0) {
+            if (outstanding_balance === 0 || (i > 2 && data?.trans_information?.[0]?.exit_car === true)) {
               console.log("Balance reached zero. Payment settled.");
               setMonitorMessage("Balance reached zero. Payment settled.");
 
@@ -259,9 +272,33 @@ const Latest = () => {
                 )
               );
 
+              // Backend call to release the crypto
+              try {
+                const payload = {
+                  recipient: address,
+                  orderHash: orderHash,
+                };
+                console.log(payload, 'payload');
+                const botResponse = await fetch("/localapi/resolve_order", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(payload),
+                });
+
+                if (!botResponse.ok) {
+                  throw new Error(`Backend API Error: ${botResponse.statusText}`);
+                }
+
+                const botData = await botResponse.json();
+                console.log("Transaction hash from backend:", botData.tx_hash);
+                setMonitorMessage(`Crypto released. Transaction hash: ${botData.tx_hash}`);
+              } catch (botError) {
+                console.error("Error calling backend to release crypto:", botError);
+                setMonitorMessage("Error occurred while releasing crypto.");
+              }
+
               setMonitoring(false);
               setCountdown(0);
-              // CALL BOT TO RELEASE THE CRYPTO FROM CONTRACT
               return;
             }
           } else {
@@ -360,7 +397,10 @@ const Latest = () => {
                   {(item.status !== "done") && (
                     <div>
                     <div style={{transform: "scale(1.3)", marginLeft: "35px"}}>
-                    <Button onClick={() => monitorBalance(item.orderId)}>
+                    <Button onClick={() => monitorBalance(
+                      item.orderId,
+                      item.orderHash
+                    )}>
                       Click To Settle QR Payment {}
                     </Button>
                     </div>
