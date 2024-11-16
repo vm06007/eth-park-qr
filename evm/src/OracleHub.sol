@@ -25,7 +25,7 @@ contract OracleHub is Owner {
 
     }
 
-    function getBahtAmount(
+    function getBahtEquivalent(
         address tokenAddress,
         uint256 tokenAmount
     )
