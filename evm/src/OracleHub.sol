@@ -94,6 +94,34 @@ contract OracleHub is Owner {
         view
         returns (uint256 tokenAmount)
     {
+        uint256 thbUsdPrice = getLatestPrice(
+            thbUsdPriceFeedAddress
+        );
+
+        uint256 tokenUsdPrice = getLatestPrice(
+            tokenPriceFeeds[token]
+        );
+
+        uint8 thbUsdDecimals = getDecimals(
+            thbUsdPriceFeedAddress
+        );
+
+        uint8 tokenUsdDecimals = getDecimals(
+            tokenPriceFeeds[token]
+        );
+
+        uint8 tokenDecimals = token == NATIVE
+            ? 18
+            : IERC20(token).decimals();
+
+        uint256 usdAmount = (bahtAmount * thbUsdPrice)
+            / (10 ** thbUsdDecimals);
+
+        uint256 adjustedTokenUsdPrice = tokenUsdPrice
+            * (10 ** (18 - tokenUsdDecimals));
+
+        tokenAmount = (usdAmount * (10 ** tokenDecimals))
+            / adjustedTokenUsdPrice;
     }
 
     function getDecimals(
