@@ -100,9 +100,13 @@ contract MyOapp is OApp, RoundInfoContract {
         bytes calldata payload,
         address,  // Executor address as specified by the OApp.
         bytes calldata  // Any extra data or options to trigger on receipt.
-    ) internal override {
-        // Decode the payload to get the message
-        // In this case, type is string, but depends on your encoding!
-        data = abi.decode(payload, (string));
+    )
+        internal
+        override
+    {
+        data = abi.decode(
+            payload,
+            (RoundInfo)
+        );
     }
 }
