@@ -164,40 +164,36 @@ contract EthParkQr is Owner {
     }
 
     function settleOrder(
-        address beneficiary,
-        OrderData memory orderData
+        address _beneficiary,
+        bytes32 _orderDataHash
     )
         onlyFriendlyBot
         external
     {
         _settleOrder(
-            beneficiary,
-            orderData,
-            false
+            _beneficiary,
+            _orderDataHash
         );
     }
 
     function _settleOrder(
-        address beneficiary,
-        OrderData memory orderData,
-        bool _isNative
+        address _beneficiary,
+        bytes32 _orderDataHash
     )
         internal
     {
     }
 
     function settleOrderNative(
-        address beneficiary,
-        uint256 bahtAmount,
-        OrderData memory orderData
+        address _beneficiary,
+        bytes32 _orderDataHash
     )
         onlyFriendlyBot
         external
     {
         _settleOrder(
-            beneficiary,
-            orderData,
-            true
+            _beneficiary,
+            _orderDataHash
         );
     }
 
