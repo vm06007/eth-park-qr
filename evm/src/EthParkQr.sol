@@ -222,7 +222,7 @@ contract EthParkQr is Owner {
 
         _payQr(
             NATIVE,
-            bahtAmount,
+            _bahtAmount,
             _baseUrl,
             _referenceString
         );
