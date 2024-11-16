@@ -38,4 +38,9 @@ interface IERC20 {
     )
         external
         returns (bool);
+
+    function decimals()
+        external
+        view
+        returns (uint8);
 }
