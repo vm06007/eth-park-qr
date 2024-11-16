@@ -5,18 +5,15 @@ import {
     Owner
 } from "./Owner.sol";
 
+import {
+    RoundInfoContract
+} from "./RoundInfoContract.sol";
+
 error OnlyFriendlyBot(
     address sender
 );
 
-contract MirroredOracle is Owner {
-
-    struct RoundInfo {
-        int256 answer;
-        uint256 startedAt;
-        uint256 updatedAt;
-        uint80 answeredInRound;
-    }
+contract MirroredOracle is Owner, RoundInfoContract {
 
     mapping(address => bool) friendlyBot;
     mapping(uint80 => RoundInfo) roundInfo;
