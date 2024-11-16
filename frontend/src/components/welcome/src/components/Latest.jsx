@@ -216,7 +216,7 @@ const Latest = () => {
         </div>
         <div className="flex justify-center mt-12 md:mt-15 xl:mt-20" style={{transform: "scale(1.5)"}}>
           <a  href={explorerUrl} target="_blank">
-            <Button>Show More On Contract Side</Button>
+            <Button>Show More On BlockScout EXPLORER</Button>
           </a>
         </div>
       </div>
