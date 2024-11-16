@@ -119,7 +119,9 @@ contract EthParkQr is Owner {
         string memory _baseUrl = orderData.baseUrl;
         string memory _referenceString = orderData.referenceString;
 
-        address actualAddress = _isNative ? NATIVE : orderData.token;
+        address actualAddress = _isNative
+            ? NATIVE
+            : orderData.token;
 
         uint256 neededAmount = ORACLE_HUB_INSTANCE.getTokenAmount(
             actualAddress,
