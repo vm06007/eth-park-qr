@@ -160,13 +160,6 @@ const Latest = () => {
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {latestEvents.map((item, i) => (
-            <a
-              key={i}
-              href={`${explorerUrlTx}/${item.txHash}`} // Link to the transaction on the explorer
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
             <div
               className={`md:flex even:md:translate-y-[7rem] p-0.25 rounded-[2.5rem] bg-n-6`}
               key={i}
@@ -196,7 +189,60 @@ const Latest = () => {
                     </div>
                   </div>
                   <h4 className="h4 mb-4">{item.title}</h4>
-                  <p className="body-2 text-n-4">{item.text}</p>
+                  <div className="body-2 text-n-4">
+                  <p>
+                    Requested By:{" "}
+                    <a
+                      href={`${contracts[chain?.id].explorer}address/${item?.from}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item?.from}
+                    </a>
+                  </p>
+                  <p>
+                    Settled By:{" "}
+                    <a
+                      href={`${contracts[chain?.id].explorer}address/${item?.to}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item?.to}
+                    </a>
+                  </p>
+                  <p>
+                    Transaction Hash:{" "}
+                    <a
+                      href={`${explorerUrlTx}/${item.txHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item.txHash}
+                    </a>
+                  </p>
+                </div>
+                  {(item.status !== "done") && (
+                    <div>
+                    <Button onClick={() => monitorBalance("abe69da7b1a31")}>
+                      Request And Settle QR: {}
+                    </Button>
+                    {monitoring && (
+                      <>
+                        <br></br>
+                        <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
+                          Scan To Settle In 60 Seconds
+                        </a>
+                        {(item.qrURL) && (
+                          <QRCode value={item.qrURL} />
+                        )}
+                        {monitorMessage}
+                      </>
+                    )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
