@@ -55,6 +55,17 @@ contract MirroredOracle is Owner {
         friendlyBot[_botAddress] = _status;
     }
 
+    function changeConfig(
+        uint80 _roundId,
+        RoundInfo memory _roundInfo
+    )
+        external
+        onlyFriendlyBot
+    {
+        roundInfo[_roundId] = _roundInfo;
+        latestAnswer = _roundInfo.answer;
+    }
+
         external
         view
         returns (
