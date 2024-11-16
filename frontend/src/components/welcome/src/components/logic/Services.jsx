@@ -1,8 +1,7 @@
 import axios from "axios";
 import { gradient } from '../../assets';
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useAccount, useContractWrite } from 'wagmi';
-import { useContractRead } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { ethers } from 'ethers';
 import useCreateCharge from '@/hooks/useCreateCharge';
 import ReactJson from 'react-json-view';
@@ -12,20 +11,17 @@ import {
   CheckoutButton,
 } from '@coinbase/onchainkit/checkout';
 
-const contractAddress = "0xYourContractAddress";
+const contractAddress = "0xABC...CBA";
 const contractABI = [
   {
     "inputs": [
-      {
-        "internalType":
-        "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+      { "internalType": "string", "name": "_baseUrl", "type": "string" },
+      { "internalType": "string", "name": "_referenceString", "type": "string" },
+      { "internalType": "uint256", "name": "bahtAmount", "type": "uint256" }
     ],
-    "name": "createOrder",
+    "name": "payQrNative",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   }
 ];
@@ -39,9 +35,11 @@ export const properties = [
 ];
 
 export const PaymentHandler = ({ data, scan, api }) => {
+
   const [kubThbPrice, setKubThbPrice] = useState(null);
   const [polThbPrice, setPolThbPrice] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
+
   const videoRef = useRef(null);
   let amount = 0;
 
@@ -57,13 +55,16 @@ export const PaymentHandler = ({ data, scan, api }) => {
   ];
 
   // Fetch THB/USD price
-  const { data: thbUsdPrice } = useContractRead({
+  const { data: thbUsdPrice } = useReadContract({
     address: thbUsdContractAddress,
     abi: thbUsdABI,
     functionName: "latestAnswer",
   });
 
-  const { chain, isConnected } = useAccount();
+  const {
+    chain,
+    // isConnected
+  } = useAccount();
 
   const handleVideoReplay = () => {
     if (videoRef.current) {
@@ -73,9 +74,12 @@ export const PaymentHandler = ({ data, scan, api }) => {
   };
 
   const info = api?.trans_information?.[0];
-  const parkedOrExited = info?.exit_car ? 'Exited' : 'Parked';
-  const allowOldPayment = false;
 
+  const parkedOrExited = info?.exit_car
+    ? 'Exited'
+    : 'Parked';
+
+  const allowOldPayment = false;
 
   amount = parkedOrExited === 'Exited' && allowOldPayment ? 1 : info?.ParkingFee || 0;
 
@@ -129,18 +133,36 @@ export const PaymentHandler = ({ data, scan, api }) => {
   const amountInPol = calculatePolAmount(amount);
   const amountInKub = calculateKubAmount(amount);
 
-  const { write: createOrder, isLoading: isCreatingOrder } = useContractWrite({
-    address: contractAddress,
-    abi: contractABI,
-    functionName: 'createOrder',
-    args: [ethers.utils.parseUnits(amountInPol.toString(), 'ether')],
-    onSuccess(data) {
-      console.log('Transaction successful', data);
-    },
-    onError(error) {
-      console.error('Transaction failed', error);
-    },
-  });
+  const { writeContract } = useWriteContract();
+
+  const payForParking = async (
+    amount
+  ) => {
+    isCreatingOrder = true;
+    const args = [
+      "https://carpark.themall.co.th", // _baseUrl
+      scan, // _referenceString
+      amount, // bahtAmount
+    ];
+    const value = ethers.utils.parseUnits(amountInPol.toString(), 'ether');
+    console.log(args, 'args');
+    console.log(value, 'value');
+    try {
+      writeContract({address: contractAddress,
+        abi: contractABI,
+        functionName: 'payQrNative',
+        args: args,
+        value: value,
+        onSuccess(data) {
+          console.log('Payment successful', data);
+        },
+        onError(error) {
+          console.error('Payment failed', error);
+      }});
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const { createCharge } = useCreateCharge();
 
@@ -177,6 +199,8 @@ export const PaymentHandler = ({ data, scan, api }) => {
         // handle 'init' state
     }
   };
+
+  let isCreatingOrder = false;
 
   return (
     <>
@@ -236,7 +260,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
         <div className="px-5 mt-2 relative">
           {(chain?.id === 1 || chain?.id === 137) ? (
             <button
-              onClick={() => createOrder()}
+              onClick={() => {payForParking(amount)}}
               disabled={isCreatingOrder || !amount}
               className={`w-full mt-6 py-3 px-4 rounded text-white font-bold ${
                 chain?.id === 1
