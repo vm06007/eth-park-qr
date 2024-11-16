@@ -85,8 +85,6 @@ const Latest = () => {
           block
         );
 
-        console.log(latest, 'latest');
-
         const recentEvents = await Promise.all(
           events.slice(-5).map(async (event, i) => {
             console.log(i, 'i');
@@ -122,7 +120,7 @@ const Latest = () => {
   }, []);
 
   return (
-    <Section className="overflow-hidden" id="latest">
+    <Section className="overflow-hidden" id="latest-payments">
       <div className="container md:pb-10">
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">

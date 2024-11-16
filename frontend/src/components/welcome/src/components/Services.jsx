@@ -64,7 +64,7 @@ const Services = () => {
   };
 
   return (
-    <Section crosses id="try-it-now">
+    <Section crosses id="try-it-now" className="pb-0">
       <div className="container">
         <Heading
           title="See How It Works"
@@ -72,7 +72,7 @@ const Services = () => {
         />
 
         <div className="relative">
-          <div className="relative z-1 grid gap-5 lg:grid-cols-2">
+          <div className="relative z-1 grid gap-5 lg:grid-cols-2 pb-0">
             <div style={{height: "630px"}} className="relative min-h-[39rem] border border-n-1/10 rounded-3xl overflow-hidden">
               <div className="absolute inset-0">
               </div>
