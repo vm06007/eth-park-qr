@@ -11,8 +11,13 @@ error OnlyFriendlyBot(
 
 contract MirroredOracle is Owner {
 
-    function latestAnswer()
-        external
+    struct RoundInfo {
+        int256 answer;
+        uint256 startedAt;
+        uint256 updatedAt;
+        uint80 answeredInRound;
+    }
+
         view
         returns (int256)
     {
