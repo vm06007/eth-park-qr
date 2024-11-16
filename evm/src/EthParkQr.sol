@@ -25,6 +25,22 @@ contract EthParkQr is Owner {
     )
         external
     {
+        _payQr(
+            token,
+            bahtAmount,
+            _baseUrl,
+            _referenceString
+        );
+    }
+
+    function _payQr(
+        address token,
+        uint256 bahtAmount,
+        string memory _baseUrl,
+        string memory _referenceString
+    )
+        internal
+    {
 
     }
 
