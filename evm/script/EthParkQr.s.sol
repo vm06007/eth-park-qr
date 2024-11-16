@@ -47,14 +47,34 @@ contract DeployOracleHub is Script {
 
 contract EthParkQrScript is Script {
     EthParkQr public ethParkQr;
-
+    address ORACLE_HUB_DEPLOYED_POLYGON = 0x35dEb8fB38D4fC1C94Db756CA395e87e567d20A3;
     function setUp() public {}
 
     function run() public {
-        vm.startBroadcast();
+        vm.startBroadcast(
+            uint256(
+                vm.envBytes32("PRIVATE_KEY")
+            )
+        );
 
+        ethParkQr = new EthParkQr(
+            ORACLE_HUB_DEPLOYED_POLYGON
+        );
 
+        console.log(
+            "EthParkQr deployed at address: ",
+            address(ethParkQr)
+        );
 
+        ethParkQr.changeBotStatus(
+            ethParkQr.owner(),
+            true
+        );
+
+        console.log(
+            "Friendly bot added: ",
+            ethParkQr.owner()
+        );
         vm.stopBroadcast();
     }
 }
