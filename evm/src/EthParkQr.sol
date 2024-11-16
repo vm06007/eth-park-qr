@@ -21,6 +21,15 @@ contract EthParkQr is Owner {
     mapping(address => uint256) public orderCountByAddress;
     mapping(uint256 => mapping(address => OrderData)) public orderBalances;
 
+    constructor(
+        address _oracleHubAddress
+    )
+    {
+        ORACLE_HUB_INSTANCE = IOracleHub(
+            _oracleHubAddress
+        );
+    }
+
     struct OrderData {
         address token;
         uint256 bahtAmount;
