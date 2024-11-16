@@ -105,8 +105,8 @@ contract EthParkQr is Owner {
         external
     {
         _payQr(
-            token,
-            bahtAmount,
+            _token,
+            _bahtAmount,
             _baseUrl,
             _referenceString
         );
