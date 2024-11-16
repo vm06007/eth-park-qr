@@ -7,12 +7,30 @@ import {OracleHub} from "../src/OracleHub.sol";
 
 contract DeployOracleHub is Script {
     OracleHub public oracleHub;
-    address THBFEED = 0x5164Ad28fb12a5e55946090Ec3eE1B748AFb3785;
-    address USDCFEED = 0xfE4A8cc5b5B2366C1B58Bea3858e81843581b2F7;
-    address USDC_ADDRESS = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
-    address WETH_POLYGON = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619;
-    address WETH_POLYGON_FEED = 0xF9680D99D6C9589e2a93a78A04A279e509205945;
-    address NATIVE_FEED = 0xAB594600376Ec9fD91F8e885dADF0CE036862dE0;
+    address THBFEED = block.chainid == 137
+        ? vm.envAddress("TBH_FEED_POLYGON")
+        : vm.envAddress("TBH_FEED_ARBITRUM");
+
+    address USDCFEED = block.chainid == 137
+        ? vm.envAddress("USDC_FEED_POLYGON")
+        : vm.envAddress("USDC_FEED_ARBITRUM");
+
+    address USDC_ADDRESS = block.chainid == 137
+        ? vm.envAddress("USDC_ADDRESS_POLYGON")
+        : vm.envAddress("USDC_ADDRESS_ARBITRUM");
+
+    address WETH_POLYGON = block.chainid == 137
+        ? vm.envAddress("WETH_ADDRESS_POLYGON")
+        : vm.envAddress("WETH_ADDRESS_ARBITRUM");
+
+    address WETH_FEED = block.chainid == 137
+        ? vm.envAddress("WETH_FEED_POLYGON")
+        : vm.envAddress("WETH_FEED_ARBITRUM");
+
+    address NATIVE_FEED = block.chainid == 137
+        ? vm.envAddress("POL_FEED_POLYGON")
+        : vm.envAddress("WETH_FEED_ARBITRUM");
+
     address public NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     function setUp() public {}
@@ -47,7 +65,10 @@ contract DeployOracleHub is Script {
 
 contract EthParkQrScript is Script {
     EthParkQr public ethParkQr;
-    address ORACLE_HUB_DEPLOYED_POLYGON = 0x35dEb8fB38D4fC1C94Db756CA395e87e567d20A3;
+    address ORACLE_HUB_DEPLOYED = block.chainid == 137
+        ? vm.envAddress("ORACLE_HUB_DEPLOYED_POLYGON")
+        : vm.envAddress("ORACLE_HUB_DEPLOYED_ARBITRUM");
+
     function setUp() public {}
 
     function run() public {
@@ -58,7 +79,7 @@ contract EthParkQrScript is Script {
         );
 
         ethParkQr = new EthParkQr(
-            ORACLE_HUB_DEPLOYED_POLYGON
+            ORACLE_HUB_DEPLOYED
         );
 
         console.log(
