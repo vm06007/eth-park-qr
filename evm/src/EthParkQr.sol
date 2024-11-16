@@ -13,6 +13,8 @@ import {
     IOracleHub
 } from "./interfaces/IOracleHub.sol";
 
+error OnlyFriendlyBot();
+
 contract EthParkQr is Owner {
 
     address ZERO_ADDRESS = address(0);
