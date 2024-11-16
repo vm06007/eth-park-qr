@@ -15,6 +15,12 @@ import {
 
 error OnlyFriendlyBot();
 error InsufficientFunds();
+error OrderDoesntAlreadyExist();
+error TokenMismatch(
+    address expected,
+    address actual
+);
+error AlreadyPaidInFull();
 
 contract EthParkQr is Owner {
 
