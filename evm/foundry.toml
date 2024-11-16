@@ -14,4 +14,5 @@ remappings = [
 [etherscan]
 
 polygon = { key = "${POLYGON_MAINNET_KEY}"}
+arbitrum = { key = "${ARBITRUM_MAINNET_KEY}"}
 
