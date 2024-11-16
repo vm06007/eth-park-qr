@@ -73,6 +73,7 @@ contract EthParkQr is Owner {
         address _address
     )
         private
+        view
     {
         require(
             friendlyBot[_address],
