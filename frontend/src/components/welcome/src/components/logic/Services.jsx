@@ -40,6 +40,8 @@ export const PaymentHandler = ({ data, scan, api }) => {
   const [polThbPrice, setPolThbPrice] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
 
+  const [transactionHash, setTransactionHash] = useState(null);
+
   const videoRef = useRef(null);
   let amount = 0;
 
@@ -160,17 +162,24 @@ export const PaymentHandler = ({ data, scan, api }) => {
     console.log(args, 'args');
     console.log(value, 'value');
     try {
-      writeContract({address: contractAddress,
+      const response = await writeContract({address: contractAddress,
         abi: contractABI,
         functionName: 'payQRNative',
         args: args,
         value: value,
         onSuccess(data) {
+          setActiveTab(3);
+          console.log(data, 'data');
+          setTransactionHash(data?.transactionHash);
           console.log('Payment successful', data);
         },
         onError(error) {
           console.error('Payment failed', error);
       }});
+      // console.log(response, 'response');
+      // setTransactionHash(response?.transactionHash);
+      // setActiveTab(3);
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -249,6 +258,21 @@ export const PaymentHandler = ({ data, scan, api }) => {
         {data && activeTab === 3 && (
           <div className="video-holder" onClick={handleVideoReplay}>
             <video ref={videoRef} autoPlay src="https://cdn.dribbble.com/users/2397255/screenshots/14467709/media/7f5f83a102e24e362d442194ca1a07b6.mp4"></video>
+            <div className="txHolder">
+            <h3 className="text-center font-bold text-green-500">
+              Payment Completed
+            </h3>
+              {transactionHash && (
+                <a
+                  href={`https://blockscout.com/tx/${transactionHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  View Transaction
+                </a>
+              )}
+              </div>
           </div>
         )}
         {data && activeTab === 2 && (
@@ -272,7 +296,10 @@ export const PaymentHandler = ({ data, scan, api }) => {
         <div className="px-5 mt-2 relative">
           {(chain?.id === 1 || chain?.id === 137) ? (
             <button
-              onClick={() => {payForParking(amount)}}
+              onClick={() => {
+                // setActiveTab(3);
+                payForParking(amount);
+              }}
               disabled={isCreatingOrder || !amount}
               className={`w-full mt-6 py-3 px-4 rounded text-white font-bold ${
                 chain?.id === 1
