@@ -9,6 +9,10 @@ import {
     IERC20
 } from "./interfaces/IERC20.sol";
 
+import {
+    IOracleHub
+} from "./interfaces/IOracleHub.sol";
+
 contract EthParkQr is Owner {
 
     address ZERO_ADDRESS = address(0);
