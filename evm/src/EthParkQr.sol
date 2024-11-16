@@ -86,6 +86,12 @@ contract EthParkQr is Owner {
         onlyOwner
         external
     {
+        _settleOrder(
+            beneficiary,
+            orderData
+        )
+    }
+
     function _settleOrder(
         address beneficiary,
         OrderData memory orderData
@@ -105,6 +111,10 @@ contract EthParkQr is Owner {
         external
     {
         // maybe use nativeAddress reference later
+        _settleOrder(
+            beneficiary,
+            orderData
+        );
     }
 
     function payQrNative(
