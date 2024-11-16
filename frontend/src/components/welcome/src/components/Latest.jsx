@@ -22,7 +22,7 @@ const contracts = {
     explorer: "https://base.blockscout.com/",
   },
   42161: {
-    address: "0x1Ba305534774Cb79E74D6D9C702C1451Cc32b8e4",
+    address: "0x5740CAD06B485E33af1384596bb7388Cd2df69bB",
     explorer: "https://arbitrum.blockscout.com/",
   },
 };
