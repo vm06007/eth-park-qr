@@ -6,6 +6,7 @@ import {
   privy,
   loading,
   coinbase,
+  bitkub,
 } from "../../src/assets";
 
 import { check } from "../assets";
@@ -26,7 +27,7 @@ export const navigation = [
 export const logos = [
   chainlink,
   layer0,
-  coinbase,
+  bitkub,
   privy,
   coinbase,
 ];

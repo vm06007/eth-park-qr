@@ -5,6 +5,7 @@ import gradient from "./gradient.png";
 import grid from "./grid.png";
 import sliders04 from "./sliders-04.svg";
 import layer0 from "./layer0.svg";
+import bitkub from "./bitkub-ex.png";
 import loading from "./loading.png";
 import loading1 from "./loading-01.svg";
 import chainlink from "./chainlink.svg";
@@ -24,6 +25,7 @@ export {
   play,
   gradient,
   grid,
+  bitkub,
   ethParkThai,
   chainlink,
   privy,
