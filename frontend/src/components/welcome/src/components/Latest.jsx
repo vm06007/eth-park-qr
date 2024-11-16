@@ -26,13 +26,10 @@ const contracts = {
 // Define contract ABI (same for all chains)
 const abi = [
   "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
+  "function amountsFromOrder(bytes32 orderDataHash) view returns (address tokenAddress, uint256 tokenAmountTotal, uint256 bahtAmountTotal, uint256 tokenAmountIssued)"
 ];
 
-const abiActual = [
-  "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
-];
-
-// Dummy Data for now
+// Helper Data
 export const latest = [
   {
     id: "0",
@@ -85,6 +82,11 @@ export const latest = [
   },
 ];
 
+const shortenHash = (hash, length = 6) => {
+  if (!hash) return "";
+  return `${hash.slice(0, length)}...${hash.slice(-length)}`;
+};
+
 const Latest = () => {
 
   const [latestEvents, setLatestEvents] = useState([]);
@@ -103,32 +105,69 @@ const Latest = () => {
       return;
     }
 
+    if (process.env.REACT_APP_MULTIBAAS_API_KEY) {
+      const query = new URLSearchParams({
+        chain: 'polygon',
+        contract_address: '0x1fC490c7FD8716A9d20232B6871951e674841b4a',
+        contract_label: 'ethparkqr1',
+      }).toString();
+
+      const hostname = 'j4kvg556rbaspaammrbt6lniqi.multibaas.com';
+      const resp = await fetch(
+        `https://${hostname}/api/v0/events?${query}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_MULTIBAAS_API_KEY}`,
+          }
+        }
+      );
+
+      const data = await resp.text();
+      console.log(data, 'events');
+    }
+
     try {
       const contract = new ethers.Contract(contracts[chainId].address, abi, provider);
       const block = await provider.getBlockNumber();
-
+      // Fetch the latest PaymentUpdated events
       const events = await contract.queryFilter(
         contract.filters.PaymentUpdated(),
         64350494, // from
         'latest' // to
       );
 
+      console.log(events, 'events');
+
       const recentEvents = await Promise.all(
-        events.slice(-6).map(async (event, i) => {
+        events.slice(-6).reverse().map(async (event, i) => {
           const blockDetails = await provider.getBlock(
             event.blockNumber
           );
 
           const date = new Date(blockDetails.timestamp * 1000).toLocaleString();
 
-          let paid = "awaiting";
-          if (i > 0) {
+          // Fetch the mapping data for the event's orderDataHash
+          const orderData = await contract.amountsFromOrder(event.args.orderDataHash);
+
+          const tokenAmountTotal = ethers.BigNumber.from(orderData.tokenAmountTotal);
+          const tokenAmountIssued = ethers.BigNumber.from(orderData.tokenAmountIssued);
+
+          let paid = tokenAmountTotal.gt(tokenAmountIssued)
+            ? "awaiting"
+            : "done";
+
+          if (i === events.length - 1) {
+            // at least one event is marked as "done" for demo
             paid = "done";
           }
+
           return {
             id: event.transactionHash,
             date,
-            // from: event.args.from,
+            orderHash: event.args.orderDataHash,
+            orderId: event.args.referenceString,
+            from: event.args.creator,
             // to: event.args.to,
             // value: ethers.utils.formatEther(event.args.value),
             title: latest[i] && latest[i].title,
@@ -175,28 +214,24 @@ const Latest = () => {
     ? `${contracts[chain?.id].explorer}/address/${contracts[chain?.id].address}`
     : "#";
 
-  // Dynamically generate block explorer URL
-  const explorerUrlAddy = chain?.id && contracts[chain?.id]?.explorer
-    ? `${contracts[chain?.id].explorer}/address/}`
-    : "#";
-
     const explorerUrlTx = chain?.id && contracts[chain?.id]?.explorer
     ? `${contracts[chain?.id].explorer}/tx/`
     : "#";
 
-    const monitorBalance = async (txHash) => {
+    const monitorBalance = async (orderId) => {
       setMonitoring(true);
       setMonitorMessage("Starting balance monitoring...");
 
       try {
         for (let i = 0; i < 60; i++) {
+
           await new Promise((resolve) => setTimeout(resolve, 1000)); // 1-second delay
           console.log("Checking balance...");
 
           const response = await fetch("/api/Home/SaveProduct1", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ X: txHash }),
+            body: JSON.stringify({ X: orderId }),
           });
 
           if (response.ok) {
@@ -208,6 +243,14 @@ const Latest = () => {
             if (outstanding_balance === 0) {
               console.log("Balance reached zero. Payment settled.");
               setMonitorMessage("Balance reached zero. Payment settled.");
+
+              // Update the status of the corresponding entry
+              setLatestEvents((prevEvents) =>
+                prevEvents.map((event) =>
+                  event.orderId === orderId ? { ...event, status: "done" } : event
+                )
+              );
+
               setMonitoring(false);
               // CALL BOT TO RELEASE THE CRYPTO FROM CONTRACT
               return;
@@ -273,7 +316,7 @@ const Latest = () => {
                       {item?.from}
                     </a>
                   </p>
-                  <p>
+                  <p className="hidden">
                     Settled By:{" "}
                     <a
                       href={`${contracts[chain?.id].explorer}address/${item?.to}`}
@@ -285,6 +328,15 @@ const Latest = () => {
                     </a>
                   </p>
                   <p>
+                    Order Hash: <span>{shortenHash(item.orderHash)}</span>
+                    <span className="hidden">
+                      {item.orderHash}
+                    </span>
+                    <span className="hidden">
+                      {item.orderId}
+                    </span>
+                  </p>
+                  <p>
                     Transaction Hash:{" "}
                     <a
                       href={`${explorerUrlTx}/${item.txHash}`}
@@ -292,15 +344,17 @@ const Latest = () => {
                       rel="noopener noreferrer"
                       className="text-blue-500 underline"
                     >
-                      {item.txHash}
+                      {shortenHash(item.txHash)}
                     </a>
                   </p>
                 </div>
                   {(item.status !== "done") && (
                     <div>
-                    <Button onClick={() => monitorBalance("abe69da7b1a31")}>
-                      Request And Settle QR: {}
+                    <div style={{transform: "scale(1.3)", marginLeft: "35px"}}>
+                    <Button onClick={() => monitorBalance(item.orderId)}>
+                      Click Settle QR Payment {}
                     </Button>
+                    </div>
                     {monitoring && (
                       <>
                         <br></br>
