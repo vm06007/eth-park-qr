@@ -172,16 +172,19 @@ contract EthParkQr is Owner {
     {
         _settleOrder(
             _beneficiary,
-            _orderDataHash
+            _orderDataHash,
+            false
         );
     }
 
     function _settleOrder(
         address _beneficiary,
-        bytes32 _orderDataHash
+        bytes32 _orderDataHash,
+        bool _isNative
     )
         internal
     {
+
     }
 
     function settleOrderNative(
@@ -193,7 +196,8 @@ contract EthParkQr is Owner {
     {
         _settleOrder(
             _beneficiary,
-            _orderDataHash
+            _orderDataHash,
+            true
         );
     }
 
