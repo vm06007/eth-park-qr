@@ -33,10 +33,16 @@ contract MirroredOracle is Owner {
         _;
     }
 
+    function _onlyFriendlyBot()
+        internal
         view
-        returns (int256)
     {
-        return 0;
+        require(
+            friendlyBot[msg.sender],
+            OnlyFriendlyBot(
+                msg.sender
+            )
+        );
     }
 
     function getRoundData()
