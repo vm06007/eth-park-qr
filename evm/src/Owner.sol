@@ -7,7 +7,11 @@ error OnlyOwner(
 );
 
 contract Owner {
-    address owner;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     modifier onlyOwner() {
         require(
