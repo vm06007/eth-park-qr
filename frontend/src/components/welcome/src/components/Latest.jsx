@@ -94,6 +94,7 @@ const Latest = () => {
   const [monitoring, setMonitoring] = useState(false);
   const [monitorMessage, setMonitorMessage] = useState("");
   const [countdown, setCountdown] = useState(seconds);
+  const [trigger, setTrigger] = useState(false);
   let diff = 0;
 
   const {
@@ -223,7 +224,11 @@ const Latest = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       fetchEvents(provider, chain?.id);
     }
-  }, [chain?.id]);
+  }, [chain?.id, trigger]);
+
+  const toggleTrigger = () => {
+    setTrigger((prev) => !prev);
+  };
 
   // Dynamically generate block explorer URL
   const explorerUrl = chain?.id && contracts[chain?.id]?.explorer
@@ -318,7 +323,7 @@ const Latest = () => {
 
   return (
     <Section className="overflow-hidden" id="latest-payments">
-      <div className="container md:pb-10">
+      <div className="container md:pb-10" onClick={() => {toggleTrigger()}}>
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {latestEvents.map((item, i) => (
