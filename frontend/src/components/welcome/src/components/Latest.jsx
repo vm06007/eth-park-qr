@@ -110,6 +110,7 @@ const Latest = () => {
             title: latest[i] && latest[i].title,
             text: `From: ${event.args.from} To: ${event.args.to} Amount: ${ethers.utils.formatEther(event.args.value)}`,
             status: "done",
+            txHash: event.transactionHash,
           };
         })
       );
@@ -149,12 +150,23 @@ const Latest = () => {
     ? `${contracts[chain?.id].explorer}/address/${contracts[chain?.id].address}`
     : "#";
 
+    const explorerUrlTx = chain?.id && contracts[chain?.id]?.explorer
+    ? `${contracts[chain?.id].explorer}/tx/`
+    : "#";
+
   return (
     <Section className="overflow-hidden" id="latest-payments">
       <div className="container md:pb-10">
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {latestEvents.map((item, i) => (
+            <a
+              key={i}
+              href={`${explorerUrlTx}/${item.txHash}`} // Link to the transaction on the explorer
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
             <div
               className={`md:flex even:md:translate-y-[7rem] p-0.25 rounded-[2.5rem] bg-n-6`}
               key={i}
@@ -188,6 +200,7 @@ const Latest = () => {
                 </div>
               </div>
             </div>
+            </a>
           ))}
           <div className="absolute top-[18.25rem] -left-[30.375rem] w-[56.625rem] opacity-60 mix-blend-color-dodge pointer-events-none">
             <div className="absolute top-1/2 left-1/2 w-[58.85rem] h-[58.85rem] -translate-x-3/4 -translate-y-1/2">
