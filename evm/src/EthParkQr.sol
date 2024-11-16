@@ -26,11 +26,21 @@ contract EthParkQr is Owner {
     mapping(address => bool) public friendlyBot;
 
     modifier onlyFriendlyBot() {
-        require(
-            friendlyBot[msg.sender],
-            OnlyFriendlyBot()
+        _onlyFriendlyBot(
+            msg.sender
         );
         _;
+    }
+
+    function _onlyFriendlyBot(
+        address _address
+    )
+        private
+    {
+        require(
+            friendlyBot[_address],
+            OnlyFriendlyBot()
+        );
     }
 
     constructor(
