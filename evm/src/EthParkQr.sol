@@ -118,11 +118,6 @@ contract EthParkQr is Owner {
             _referenceString
         );
 
-        uint256 actualTokenAmount = ORACLE_HUB_INSTANCE.getTokenEquivalent(
-            _token,
-            _bahtAmount
-        );
-
         IERC20(_token).transferFrom(
             msg.sender,
             address(this),
