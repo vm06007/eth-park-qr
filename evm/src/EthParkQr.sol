@@ -137,7 +137,29 @@ contract EthParkQr is Owner {
         internal
         returns (uint256 tokenAmount)
     {
+        OrderData memory orderData = OrderData(
+            _baseUrl,
+            _referenceString,
+            _token,
+            msg.sender
+        );
 
+        bytes32 orderDataHash = getKeccack256(
+            orderData
+        );
+
+        Amounts storage data = amountsFromOrder[orderDataHash];
+
+        tokenAmount = oracleHub.getTokenEquivalent(
+            _token,
+            _bahtAmount
+        );
+
+        data.tokenAddress = _token;
+        data.tokenAmountTotal = data.tokenAmountTotal
+            + actualTokenAmount;
+        data.bahtAmountTotal = data.bahtAmountTotal
+            + _bahtAmount;
     }
 
     function settleOrder(
