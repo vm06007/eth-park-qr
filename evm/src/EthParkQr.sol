@@ -94,7 +94,8 @@ contract EthParkQr is Owner {
 
     function _settleOrder(
         address beneficiary,
-        OrderData memory orderData
+        OrderData memory orderData,
+        bool _isNative
     )
         internal
     {
