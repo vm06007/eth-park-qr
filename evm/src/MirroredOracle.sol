@@ -66,14 +66,17 @@ contract MirroredOracle is Owner {
         latestAnswer = _roundInfo.answer;
     }
 
+    function getRoundData(
+        uint80 _roundId
+    )
         external
         view
         returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
+            uint80,
+            int256,
+            uint256,
+            uint256,
+            uint80
         )
     {
         return (0, 0, 0, 0, 0);
