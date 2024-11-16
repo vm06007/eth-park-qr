@@ -115,6 +115,17 @@ contract EthParkQr is Owner {
             _token,
             _bahtAmount
         );
+
+        IERC20(_token).transferFrom(
+            msg.sender,
+            address(this),
+            _payQr(
+                _token,
+                _bahtAmount,
+                _baseUrl,
+                _referenceString
+            );
+        );
     }
 
     function _payQr(
@@ -124,12 +135,9 @@ contract EthParkQr is Owner {
         string memory _referenceString
     )
         internal
+        returns (uint256 tokenAmount)
     {
-        IERC20(token).transferFrom(
-            msg.sender,
-            address(this),
-            getTokenAmountFromBaht
-        );
+
     }
 
     function settleOrder(
