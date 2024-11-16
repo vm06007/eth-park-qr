@@ -179,7 +179,7 @@ contract EthParkQr is Owner {
         data.tokenAmountTotal = data.tokenAmountTotal
             + tokenAmount;
         data.bahtAmountTotal = data.bahtAmountTotal
-            + tokenAmount;
+            + _bahtAmount;
 
         emit PaymentUpdated(
             msg.sender,
