@@ -39,6 +39,8 @@ contract EthParkQr is Owner {
             _referenceString
         );
 
+        orderBalances[orderCountByAddress[msg.sender]][msg.sender] = orderData;
+
         _payQr(
             token,
             bahtAmount,
