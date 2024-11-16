@@ -2,14 +2,14 @@
 pragma solidity =0.8.28;
 
 interface IOracleHub {
-    function getTokenAmount(
+    function getTokenEquivalent(
         address tokenAddress,
         uint256 bahtAmount
     )
         external
         returns (uint256);
 
-    function getBahtAmount(
+    function getBahtEquivalent(
         address tokenAddress,
         uint256 tokenAmount
     )
