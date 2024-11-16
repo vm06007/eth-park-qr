@@ -280,12 +280,11 @@ contract EthParkQr is Owner {
         );
     }
 
-    function payQrNative(
+    function payQRNative(
         string memory _baseUrl,
         string memory _referenceString,
         uint256 _bahtAmount
     )
-        onlyOwner
         external
         payable
     {
