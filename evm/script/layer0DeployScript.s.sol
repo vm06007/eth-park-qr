@@ -28,6 +28,11 @@ contract layer0DeployScript is Script {
 
         endPoint = vm.envAddress("ENDPOINT");
 
+        require(
+            endPoint != address(0),
+            "ENDPOINT not set"
+        );
+
         myOapp = new MyOapp(
             endPoint,
             deployer
