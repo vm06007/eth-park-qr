@@ -7,6 +7,9 @@ import {
 
 contract EthParkQr is Owner {
 
+    address ZERO_ADDRESS = address(0);
+    address public NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
     struct OrderData {
         address token;
         uint256 bahtAmount;
