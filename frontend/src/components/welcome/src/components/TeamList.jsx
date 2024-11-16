@@ -1,39 +1,38 @@
 import { check } from "../assets";
-import Button from "./Button";
 
 const team = [
   {
     id: "0",
     title: "Rene Hochmuth",
-    description: "Developers Developers Developers Developers Developers Developers",
+    description: "Solidity Developer / Script Developer",
     features: [
-      "Build A",
-      "Build B",
+      "Responsible For Smart Contract",
+      "Responsible For 0Layer Connection",
     ],
   },
   {
     id: "1",
     title: "Vitalik Marincenko",
-    description: "Developers Developers Developers Developers Developers Developers",
+    description: "Frontend Developer / Backend Developer",
     features: [
-      "Build A",
-      "Build B",
+      "Responsible For Frontend",
+      "Responsible For CoinBase Tool",
     ],
   },
   {
     id: "2",
     title: "Surasawadee AI",
-    description: "Developers Developers Developers Developers Developers Developers",
+    description: "Artificial Intelligence Instance / Generator",
     features: [
-      "Build A",
-      "Build B",
+      "Helps Generatic Code Snippets",
+      "Helps With System Architecture",
     ],
   },
 ];
 
 const TeamList = () => {
   return (
-    <div className="flex gap-[1rem] max-lg:flex-wrap">
+    <div className="flex gap-[1rem] max-lg:flex-wrap" style={{justifyContent: "center"}}>
       {team.map((item) => (
         <div
           key={item.id}
@@ -43,9 +42,6 @@ const TeamList = () => {
           <p className="body-2 min-h-[4rem] mb-3 text-n-1/50">
             {item.description}
           </p>
-          <Button className="w-full mb-6">
-            See Profile
-          </Button>
           <ul>
             {item.features.map((feature, index) => (
               <li
