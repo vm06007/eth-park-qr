@@ -23,6 +23,15 @@ contract MyOapp is OApp, RoundInfoContract {
 
     }
 
+    RoundInfo public data;
+
+    using OptionsBuilder for bytes;
+
+    bytes public options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(
+        50000,
+        0
+    );
+
     function send(
         uint32 _dstEid,
         string memory _message,
