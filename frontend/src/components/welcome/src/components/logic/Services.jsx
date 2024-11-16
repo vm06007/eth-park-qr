@@ -197,7 +197,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
 
     const contractAddress = chain?.id === 137
       ? "0x1fC490c7FD8716A9d20232B6871951e674841b4a"
-      : "0xd366f36a2bDaE5F7Be8b4c6c64BF8BA9Cf3b7099";
+      : "0x1Ba305534774Cb79E74D6D9C702C1451Cc32b8e4";
 
     try {
       setLoading(true);

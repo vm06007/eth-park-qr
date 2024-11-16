@@ -22,7 +22,7 @@ const contracts = {
     explorer: "https://base.blockscout.com/",
   },
   42161: {
-    address: "0xd366f36a2bDaE5F7Be8b4c6c64BF8BA9Cf3b7099",
+    address: "0x1Ba305534774Cb79E74D6D9C702C1451Cc32b8e4",
     explorer: "https://arbitrum.blockscout.com/",
   },
 };
@@ -204,29 +204,63 @@ const Latest = () => {
   };
 
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(
-      window.ethereum
-    );
+    let provider;
 
-    const handleChainChanged = async () => {
-      // await fetchChainId(provider);
-      await fetchEvents(
-        provider,
-        chain?.id
-      );
-    };
+    try {
+      if (window.ethereum) {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      } else {
+        console.warn("No wallet detected. Using a fallback provider.");
+        // Use a fallback read-only provider
+        provider = new ethers.providers.JsonRpcProvider(
+          "https://polygon-mainnet.infura.io/v3/<YourKey>"
+        );
+      }
 
-    window.ethereum.on("chainChanged", handleChainChanged);
+      const handleChainChanged = async () => {
+        try {
+          await fetchEvents(provider, chain?.id);
+        } catch (error) {
+          console.error("Error handling chain change:", error);
+        }
+      };
 
-    return () => {
-      window.ethereum.removeListener("chainChanged", handleChainChanged);
-    };
+      // Listen for chain changes
+      if (window.ethereum) {
+        window.ethereum.on("chainChanged", handleChainChanged);
+      }
+
+      // Cleanup the event listener on unmount
+      return () => {
+        if (window.ethereum) {
+          window.ethereum.removeListener("chainChanged", handleChainChanged);
+        }
+      };
+    } catch (error) {
+      console.error("Failed to initialize provider:", error);
+    }
   }, [chain?.id]);
+
 
   useEffect(() => {
     if (chain?.id) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      fetchEvents(provider, chain?.id);
+      let provider;
+
+      try {
+        if (window.ethereum) {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+        } else {
+          console.warn("No wallet detected. Using a fallback provider.");
+          // Use a fallback read-only provider
+          provider = new ethers.providers.JsonRpcProvider(
+            "https://polygon-mainnet.infura.io/v3/<YourKey>"
+          );
+        }
+
+        fetchEvents(provider, chain?.id);
+      } catch (error) {
+        console.error("Failed to initialize provider:", error);
+      }
     }
   }, [chain?.id, trigger]);
 
