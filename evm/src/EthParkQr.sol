@@ -24,6 +24,23 @@ error AlreadyPaidInFull();
 
 contract EthParkQr is Owner {
 
+    event PaymentUpdated(
+        address creator,
+        string indexed baseUrl,
+        string referenceString,
+        address indexed tokenAddress,
+        uint256 tokenAmount,
+        uint256 bahtAmount,
+        bytes32 indexed orderDataHash
+    );
+
+    event OrderSettled(
+        address indexed tokenAddress,
+        uint256 tokenAmount,
+        uint256 indexed bahtAmount,
+        bytes32 orderDataHash
+    );
+
     address ZERO_ADDRESS = address(0);
     address public NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     IOracleHub public immutable ORACLE_HUB_INSTANCE;
