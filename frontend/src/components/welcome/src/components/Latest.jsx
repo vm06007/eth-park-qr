@@ -144,9 +144,14 @@ const Latest = () => {
       );
       // const block = await provider.getBlockNumber();
       // Fetch the latest PaymentUpdated events
+
+      const fromBlock = chainId === 137
+        ? 64357300
+        : 275213706;
+
       const events = await contract.queryFilter(
         contract.filters.PaymentUpdated(),
-        64357300, // from
+        fromBlock, // from
         'latest' // to
       );
 
