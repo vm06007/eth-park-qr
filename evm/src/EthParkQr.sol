@@ -180,6 +180,16 @@ contract EthParkQr is Owner {
             + tokenAmount;
         data.bahtAmountTotal = data.bahtAmountTotal
             + tokenAmount;
+
+        emit PaymentUpdated(
+            msg.sender,
+            _baseUrl,
+            _referenceString,
+            _token,
+            tokenAmount,
+            _bahtAmount,
+            orderDataHash
+        );
     }
 
     function settleOrder(
