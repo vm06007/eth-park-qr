@@ -227,8 +227,10 @@ contract EthParkQr is Owner {
             _referenceString
         );
 
-        if (msg.value > neededAmount) {
-            payable(msg.sender).transfer(msg.value - neededAmount);
+        if (msg.value > actualTokenAmount) {
+            payable(msg.sender).transfer(
+                msg.value - actualTokenAmount
+            );
         }
     }
 }
