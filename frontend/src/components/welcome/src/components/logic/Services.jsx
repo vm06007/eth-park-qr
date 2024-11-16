@@ -102,9 +102,15 @@ export const PaymentHandler = ({ data, scan, api }) => {
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        const response = await axios.get("https://api.bitkub.com/api/market/ticker");
-        setKubThbPrice(response.data.THB_KUB.last);
-        setPolThbPrice(response.data.THB_POL.last);
+        const response = await axios.get(
+          "https://api.bitkub.com/api/market/ticker"
+        );
+        setKubThbPrice(
+          response.data.THB_KUB.last
+        );
+        setPolThbPrice(
+          response.data.THB_POL.last
+        );
       } catch (error) {
         console.info("Failed to fetch price data:", error);
       }
@@ -178,8 +184,8 @@ export const PaymentHandler = ({ data, scan, api }) => {
       description: 'commerce template charge description',
       pricing_type: 'fixed_price',
       metadata: {
-        custom_field: "pathUrl",
-        custom_field_two: "qrId"
+        custom_field: "https://carpark.themall.co.th/?data=",
+        custom_field_two: scan,
       },
       local_price: {
         amount: amount.toString(),
