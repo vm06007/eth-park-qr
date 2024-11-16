@@ -6,6 +6,7 @@ import Services from "./components/Services";
 import Latest from "./components/Latest";
 import Team from "./components/Team";
 import Footer from "./components/Footer";
+import Venues from "./components/Venues";
 import "./index.css";
 
 const Welcome = () => {
@@ -15,6 +16,7 @@ const Welcome = () => {
         <Header />
         <Hero />
         <MyLogos />
+        <Venues />
         <Services />
         <Latest />
         <Team />
