@@ -148,7 +148,8 @@ const Latest = () => {
       console.log(events, 'events');
 
       const recentEvents = await Promise.all(
-        events.slice(-6).reverse().map(async (event, i) => {
+        events.slice(-5).reverse().map(async (event, i) => {
+
           const blockDetails = await provider.getBlock(
             event.blockNumber
           );
@@ -237,7 +238,7 @@ const Latest = () => {
 
       setCountdown(seconds);
       setMonitoring(true);
-      setMonitorMessage(`Starting balance monitoring... If settled you will receive ${diff} `);
+      setMonitorMessage(`Starting balance monitoring...`);
 
       try {
         for (let i = 0; i < seconds; i++) {
@@ -409,12 +410,12 @@ const Latest = () => {
                         <br></br>
                         <div className="flex" style={{flexDirection: "row-reverse"}}>
                         <span className="counter">
-                          <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
+                          <a href={`https://carpark.themall.co.th/?data=${item.orderId}`} target="_blank">
                             Scan To Settle In {countdown} seconds
                           </a>
                         </span>
                         {(item.qrURL) && (
-                          <QRCode value={item.qrURL} />
+                          <QRCode value={`https://carpark.themall.co.th/?data=${item.orderId}`} />
                         )}
                         </div>
                         <br></br>

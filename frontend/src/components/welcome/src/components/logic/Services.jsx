@@ -2,8 +2,10 @@ import axios from "axios";
 import { gradient } from '../../assets';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { rainbowkitConfig } from "@/config/rainbowkitConfig";
 import { ethers } from 'ethers';
 import useCreateCharge from '@/hooks/useCreateCharge';
+import { waitForTransactionReceipt } from "wagmi/actions";
 import ReactJson from 'react-json-view';
 import { file02, sliders04, check } from '../../assets';
 import {
@@ -39,7 +41,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
   const [kubThbPrice, setKubThbPrice] = useState(null);
   const [polThbPrice, setPolThbPrice] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
-
+  const [loading, setLoading] = useState(false);
   const [transactionHash, setTransactionHash] = useState(null);
 
   const videoRef = useRef(null);
@@ -144,7 +146,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
   const amountInPol = calculatePolAmount(amount) * 1.10;
   const amountInKub = calculateKubAmount(amount);
 
-  const { writeContract } = useWriteContract();
+  const { writeContractAsync } = useWriteContract();
 
   const payForParking = async (
     amount
@@ -162,25 +164,33 @@ export const PaymentHandler = ({ data, scan, api }) => {
     console.log(args, 'args');
     console.log(value, 'value');
     try {
-      const response = await writeContract({address: contractAddress,
+      setLoading(true);
+      const txHash = await writeContractAsync({
+        address: contractAddress,
         abi: contractABI,
         functionName: 'payQRNative',
         args: args,
         value: value,
-        onSuccess(data) {
-          setActiveTab(3);
-          console.log(data, 'data');
-          setTransactionHash(data?.transactionHash);
-          console.log('Payment successful', data);
-        },
-        onError(error) {
-          console.error('Payment failed', error);
-      }});
-      // console.log(response, 'response');
-      // setTransactionHash(response?.transactionHash);
-      // setActiveTab(3);
+      });
+
+      console.log(txHash, 'txHash');
+
+      setTransactionHash(txHash);
+      setActiveTab(3);
+
+      await waitForTransactionReceipt(rainbowkitConfig, {
+        confirmations: 1,
+        hash: txHash,
+      });
+
+      setLoading(false);
+      console.log(txHash, 'txHash');
+      console.log(response, 'response');
+      setTransactionHash(txHash);
+      setActiveTab(3);
 
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -264,7 +274,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
             </h3>
               {transactionHash && (
                 <a
-                  href={`https://blockscout.com/tx/${transactionHash}`}
+                  href={`https://polygon.blockscout.com/tx/${transactionHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
@@ -307,7 +317,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
                   : 'bg-purple-500 hover:bg-purple-700'
               }`}
             >
-              {isCreatingOrder
+              {loading
                 ? 'Processing...'
                 : chain?.id === 1
                 ? `Pay ${amount.toFixed(2)} THB with ${amountInKub.toFixed(4)} KUB`
