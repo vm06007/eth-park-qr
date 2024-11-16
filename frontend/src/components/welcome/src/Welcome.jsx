@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import MyLogos from "./components/MyLogos";
 import Services from "./components/Services";
 import Latest from "./components/Latest";
+import Team from "./components/Team";
 import "./index.css";
 
 const Welcome = () => {
@@ -15,6 +16,7 @@ const Welcome = () => {
         <MyLogos />
         <Services />
         <Latest />
+        <Team />
       </div>
     </>
   );
