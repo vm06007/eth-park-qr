@@ -157,9 +157,9 @@ contract EthParkQr is Owner {
 
         data.tokenAddress = _token;
         data.tokenAmountTotal = data.tokenAmountTotal
-            + actualTokenAmount;
+            + tokenAmount;
         data.bahtAmountTotal = data.bahtAmountTotal
-            + _bahtAmount;
+            + tokenAmount;
     }
 
     function settleOrder(
