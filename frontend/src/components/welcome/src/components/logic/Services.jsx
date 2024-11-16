@@ -80,6 +80,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
   amount = parkedOrExited === 'Exited' && allowOldPayment ? 1 : info?.ParkingFee || 0;
 
   let mallName = '...';
+  if (info?.entrygate_name?.includes('EMS')) mallName = 'EmSphere Mall';
   if (info?.entrygate_name?.includes('EMQ')) mallName = 'EmQuartier Mall';
 
   const initialValues = [
