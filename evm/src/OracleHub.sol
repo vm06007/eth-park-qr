@@ -6,6 +6,7 @@ import {
 } from "./Owner.sol";
 
 import "./Interfaces/AggregatorV3Interface.sol";
+import "./Interfaces/IERC20.sol";
 
 error InvalidPrice();
 
