@@ -95,11 +95,16 @@ contract MyOapp is OApp, RoundInfoContract {
         );
 
         lastInteraction = block.timestamp;
+
+        data = abi.decode(
+            _message,
+            (RoundInfo)
+        );
     }
 
     function _lzReceive(
-        Origin calldata _origin,
-        bytes32 _guid,
+        Origin calldata,
+        bytes32,
         bytes calldata payload,
         address,  // Executor address as specified by the OApp.
         bytes calldata  // Any extra data or options to trigger on receipt.
