@@ -11,15 +11,15 @@ import {
   CheckoutButton,
 } from '@coinbase/onchainkit/checkout';
 
-const contractAddress = "0xABC...CBA";
+const contractAddress = "0x1fC490c7FD8716A9d20232B6871951e674841b4a";
 const contractABI = [
   {
     "inputs": [
       { "internalType": "string", "name": "_baseUrl", "type": "string" },
       { "internalType": "string", "name": "_referenceString", "type": "string" },
-      { "internalType": "uint256", "name": "bahtAmount", "type": "uint256" }
+      { "internalType": "uint256", "name": "_bahtAmount", "type": "uint256" }
     ],
-    "name": "payQrNative",
+    "name": "payQRNative",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -81,7 +81,10 @@ export const PaymentHandler = ({ data, scan, api }) => {
 
   const allowOldPayment = false;
 
-  amount = parkedOrExited === 'Exited' && allowOldPayment ? 1 : info?.ParkingFee || 0;
+  amount = parkedOrExited === 'Exited' && allowOldPayment
+    ? 1
+    : info?.ParkingFee - info?.paid || 0;
+    // : info?.ParkingFee || 0;
 
   let mallName = '...';
   if (info?.entrygate_name?.includes('EMS')) mallName = 'EmSphere Mall';
@@ -130,7 +133,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
     return thbInPol;
   };
 
-  const amountInPol = calculatePolAmount(amount);
+  const amountInPol = calculatePolAmount(amount) * 1.10;
   const amountInKub = calculateKubAmount(amount);
 
   const { writeContract } = useWriteContract();
@@ -138,11 +141,14 @@ export const PaymentHandler = ({ data, scan, api }) => {
   const payForParking = async (
     amount
   ) => {
+    const amountFull = ethers.utils.parseUnits(amount.toString(), 'ether')
+    const amountFullString = amountFull.toString();
+    console.log(amountFullString, 'amountFullString');
     isCreatingOrder = true;
     const args = [
-      "https://carpark.themall.co.th", // _baseUrl
+      "https://carpark.themall.co.th/?data=", // _baseUrl
       scan, // _referenceString
-      amount, // bahtAmount
+      amountFull, // bahtAmount
     ];
     const value = ethers.utils.parseUnits(amountInPol.toString(), 'ether');
     console.log(args, 'args');
@@ -150,7 +156,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
     try {
       writeContract({address: contractAddress,
         abi: contractABI,
-        functionName: 'payQrNative',
+        functionName: 'payQRNative',
         args: args,
         value: value,
         onSuccess(data) {
