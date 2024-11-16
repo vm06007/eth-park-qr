@@ -24,6 +24,7 @@ contract MyOapp is OApp, RoundInfoContract {
     }
 
     RoundInfo public data;
+    uint256 public lastInteraction;
 
     using OptionsBuilder for bytes;
 
@@ -92,6 +93,8 @@ contract MyOapp is OApp, RoundInfoContract {
             // Refund address in case of failed source message.
             payable(msg.sender)
         );
+
+        lastInteraction = block.timestamp;
     }
 
     function _lzReceive(
@@ -108,5 +111,7 @@ contract MyOapp is OApp, RoundInfoContract {
             payload,
             (RoundInfo)
         );
+
+        lastInteraction = block.timestamp;
     }
 }
