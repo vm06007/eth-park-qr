@@ -61,6 +61,7 @@ contract EthParkQr is Owner {
         OrderData memory orderData = OrderData(
             token,
             bahtAmount,
+            0,
             _baseUrl,
             _referenceString
         );
