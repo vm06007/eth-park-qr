@@ -6,6 +6,8 @@ import {
 } from "./Owner.sol";
 
 import "./Interfaces/AggregatorV3Interface.sol";
+
+error InvalidPrice();
 contract OracleHub is Owner {
     mapping(address => address) public tokenPriceFeeds;
 
