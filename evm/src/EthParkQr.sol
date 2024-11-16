@@ -129,7 +129,7 @@ contract EthParkQr is Owner {
     }
 
     function _payQr(
-        address token,
+        address _token,
         uint256 bahtAmount,
         string memory _baseUrl,
         string memory _referenceString
