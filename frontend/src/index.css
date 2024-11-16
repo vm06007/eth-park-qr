@@ -28,3 +28,15 @@
 .imger li:first-child img {
   width: 160px;
 }
+
+.switcher {
+  display: flex;
+  justify-content: end;
+  gap: 4px;
+  z-index: 10;
+  position: relative;
+  flex-direction: row-reverse;
+  margin-top: -40px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}

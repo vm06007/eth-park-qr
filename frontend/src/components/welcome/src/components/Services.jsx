@@ -3,6 +3,7 @@ import Heading from "./Heading";
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { gradient } from '../assets';
+import { PaymentHandler } from "./logic/Services";
 import { Scanner } from '@yudiel/react-qr-scanner';
 
 const Services = () => {
@@ -129,10 +130,12 @@ const Services = () => {
                   Now you can settle your parking fee with crypto
                 </p>
                 </>)}
+                <div className="relative h-[20rem] bg-n-8 rounded-xl overflow-hidden md:h-[29rem]">
+                  <PaymentHandler scan={scan} data={data} api={apiResponse} />
+                </div>
               </div>
             </div>
           </div>
-
           <div className="absolute top-0 -left-[10rem] w-[56.625rem] h-[56.625rem] opacity-50 mix-blend-color-dodge pointer-events-none">
             <img
               className="absolute top-1/2 left-1/2 w-[79.5625rem] max-w-[79.5625rem] h-[88.5625rem] -translate-x-1/2 -translate-y-1/2"
