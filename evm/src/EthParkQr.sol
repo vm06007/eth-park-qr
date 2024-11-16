@@ -89,7 +89,7 @@ contract EthParkQr is Owner {
         _settleOrder(
             beneficiary,
             orderData
-        )
+        );
     }
 
     function _settleOrder(
