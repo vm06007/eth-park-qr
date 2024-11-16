@@ -12,7 +12,7 @@ contract OracleHub is Owner {
     address public constant NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     constructor() {
-        owner = msg.sender;
+
     }
 
     function addFeed(
