@@ -21,10 +21,10 @@ const team = [
   },
   {
     id: "2",
-    title: "Surasawadee AI",
+    title: "สุรัสวดี ทองนวล AI",
     description: "Artificial Intelligence Instance / Generator",
     features: [
-      "Helps Generatic Code Snippets",
+      "Helps With Code Snippets",
       "Helps With System Architecture",
     ],
   },

@@ -5,18 +5,19 @@ import Button from "./Button";
 import Heading from "./Heading";
 import Section from "./Sections";
 import Tagline from "./Tagline";
+import QRCode from 'react-qr-code';
 import { check, grid, loading1, gradient } from "../assets";
 
 const contracts = {
-  1: { // Ethereum Mainnet
+  1: { // Ethereum Mainnet (USDC contract)
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     explorer: "https://eth.blockscout.com/",
   },
-  137: { // Polygon Mainnet
-    address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  137: { // Polygon Mainnet (Actual PayQRContract)
+    address: "0x1fC490c7FD8716A9d20232B6871951e674841b4a",
     explorer: "https://polygon.blockscout.com/",
   },
-  8453: { // Base Mainnet
+  8453: { // Base Mainnet (USDC contract)
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     explorer: "https://base.blockscout.com/",
   },
@@ -24,7 +25,11 @@ const contracts = {
 
 // Define contract ABI (same for all chains)
 const abi = [
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
+  "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
+];
+
+const abiActual = [
+  "event PaymentUpdated(address creator, string indexed baseUrl, string referenceString, address indexed tokenAddress, uint256 tokenAmount, uint256 bahtAmount, bytes32 indexed orderDataHash)",
 ];
 
 // Dummy Data for now
@@ -35,7 +40,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 11:23pm",
     status: "done",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
     colorful: true,
   },
   {
@@ -44,7 +49,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "2",
@@ -52,7 +57,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "3",
@@ -60,7 +65,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "4",
@@ -68,13 +73,23 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
-     // qrURL: ,
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
+  },
+  {
+    id: "4",
+    title: "7กณ574 @ EmQuartier",
+    text: "Details about the parking",
+    date: "November 15, 2024 10:23pm",
+    status: "progress",
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
 ];
 
 const Latest = () => {
 
   const [latestEvents, setLatestEvents] = useState([]);
+  const [monitoring, setMonitoring] = useState(false);
+  const [monitorMessage, setMonitorMessage] = useState("");
 
   const {
     chain,
@@ -92,29 +107,39 @@ const Latest = () => {
       const contract = new ethers.Contract(contracts[chainId].address, abi, provider);
       const block = await provider.getBlockNumber();
 
-      // Fetch the latest 5 Transfer events from recent blocks
       const events = await contract.queryFilter(
-        contract.filters.Transfer(),
-        block - 100,
-        block
+        contract.filters.PaymentUpdated(),
+        64350494, // from
+        'latest' // to
       );
 
       const recentEvents = await Promise.all(
-        events.slice(-5).map(async (event, i) => {
-          const blockDetails = await provider.getBlock(event.blockNumber);
+        events.slice(-6).map(async (event, i) => {
+          const blockDetails = await provider.getBlock(
+            event.blockNumber
+          );
+
           const date = new Date(blockDetails.timestamp * 1000).toLocaleString();
 
+          let paid = "awaiting";
+          if (i > 0) {
+            paid = "done";
+          }
           return {
             id: event.transactionHash,
             date,
+            // from: event.args.from,
+            // to: event.args.to,
+            // value: ethers.utils.formatEther(event.args.value),
             title: latest[i] && latest[i].title,
-            text: `From: ${event.args.from} To: ${event.args.to} Amount: ${ethers.utils.formatEther(event.args.value)}`,
-            status: "done",
+            qrURL: latest[i] && latest[i].qrURL,
+            // text: `From: ${event.args.from} To: ${event.args.to} Amount: ${ethers.utils.formatEther(event.args.value)}`,
+            status: paid,
             txHash: event.transactionHash,
           };
         })
       );
-      console.log(recentEvents, 'recentEvents');
+      // console.log(recentEvents, 'recentEvents');
       setLatestEvents(recentEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -127,7 +152,7 @@ const Latest = () => {
     );
 
     const handleChainChanged = async () => {
-      await fetchChainId(provider);
+      // await fetchChainId(provider);
       await fetchEvents(provider, chain?.id);
     };
 
@@ -150,9 +175,56 @@ const Latest = () => {
     ? `${contracts[chain?.id].explorer}/address/${contracts[chain?.id].address}`
     : "#";
 
+  // Dynamically generate block explorer URL
+  const explorerUrlAddy = chain?.id && contracts[chain?.id]?.explorer
+    ? `${contracts[chain?.id].explorer}/address/}`
+    : "#";
+
     const explorerUrlTx = chain?.id && contracts[chain?.id]?.explorer
     ? `${contracts[chain?.id].explorer}/tx/`
     : "#";
+
+    const monitorBalance = async (txHash) => {
+      setMonitoring(true);
+      setMonitorMessage("Starting balance monitoring...");
+
+      try {
+        for (let i = 0; i < 60; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // 1-second delay
+          console.log("Checking balance...");
+
+          const response = await fetch("/api/Home/SaveProduct1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ X: txHash }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const outstanding_balance = data.all_fee - data.all_paid;
+            console.log(data);
+            console.log(outstanding_balance, 'outstanding balance');
+
+            if (outstanding_balance === 0) {
+              console.log("Balance reached zero. Payment settled.");
+              setMonitorMessage("Balance reached zero. Payment settled.");
+              setMonitoring(false);
+              // CALL BOT TO RELEASE THE CRYPTO FROM CONTRACT
+              return;
+            }
+          } else {
+            console.error(`Error checking balance: ${response.statusText}`);
+          }
+        }
+        console.log('Balance did not reach zero within 60 seconds.');
+        setMonitorMessage("Balance did not reach zero within 60 seconds.");
+      } catch (error) {
+        console.error("Error monitoring balance:", error);
+        setMonitorMessage("Error occurred during balance monitoring.");
+      }
+
+      setMonitoring(false);
+    };
 
   return (
     <Section className="overflow-hidden" id="latest-payments">
@@ -160,13 +232,6 @@ const Latest = () => {
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {latestEvents.map((item, i) => (
-            <a
-              key={i}
-              href={`${explorerUrlTx}/${item.txHash}`} // Link to the transaction on the explorer
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
             <div
               className={`md:flex even:md:translate-y-[7rem] p-0.25 rounded-[2.5rem] bg-n-6`}
               key={i}
@@ -192,15 +257,67 @@ const Latest = () => {
                         height={16}
                         alt={item.status}
                       />
-                      <div className="tagline">Paid</div>
+                      <div className="tagline">{item.status}</div>
                     </div>
                   </div>
                   <h4 className="h4 mb-4">{item.title}</h4>
-                  <p className="body-2 text-n-4">{item.text}</p>
+                  <div className="body-2 text-n-4">
+                  <p>
+                    Requested By:{" "}
+                    <a
+                      href={`${contracts[chain?.id].explorer}address/${item?.from}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item?.from}
+                    </a>
+                  </p>
+                  <p>
+                    Settled By:{" "}
+                    <a
+                      href={`${contracts[chain?.id].explorer}address/${item?.to}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item?.to}
+                    </a>
+                  </p>
+                  <p>
+                    Transaction Hash:{" "}
+                    <a
+                      href={`${explorerUrlTx}/${item.txHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {item.txHash}
+                    </a>
+                  </p>
+                </div>
+                  {(item.status !== "done") && (
+                    <div>
+                    <Button onClick={() => monitorBalance("abe69da7b1a31")}>
+                      Request And Settle QR: {}
+                    </Button>
+                    {monitoring && (
+                      <>
+                        <br></br>
+                        <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
+                          Scan To Settle In 60 Seconds
+                        </a>
+                        {(item.qrURL) && (
+                          <QRCode value={item.qrURL} />
+                        )}
+                        {monitorMessage}
+                      </>
+                    )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-            </a>
           ))}
           <div className="absolute top-[18.25rem] -left-[30.375rem] w-[56.625rem] opacity-60 mix-blend-color-dodge pointer-events-none">
             <div className="absolute top-1/2 left-1/2 w-[58.85rem] h-[58.85rem] -translate-x-3/4 -translate-y-1/2">
@@ -216,7 +333,7 @@ const Latest = () => {
         </div>
         <div className="flex justify-center mt-12 md:mt-15 xl:mt-20" style={{transform: "scale(1.5)"}}>
           <a  href={explorerUrl} target="_blank">
-            <Button>Show More On Contract Side</Button>
+            <Button>Show More On BlockScout EXPLORER</Button>
           </a>
         </div>
       </div>
