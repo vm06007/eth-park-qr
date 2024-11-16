@@ -32,13 +32,13 @@ contract OracleHub is Owner {
 
     }
 
-    function getTokenAmount(
-        address tokenAddress,
+    function getTokenEquivalent(
+        address token,
         uint256 bahtAmount
     )
         external
-        returns (uint256)
+        view
+        returns (uint256 tokenAmount)
     {
-
     }
 }
