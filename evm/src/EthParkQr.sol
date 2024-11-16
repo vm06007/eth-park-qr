@@ -110,7 +110,6 @@ contract EthParkQr is Owner {
         onlyOwner
         external
     {
-        // maybe use nativeAddress reference later
         _settleOrder(
             beneficiary,
             orderData
