@@ -57,6 +57,7 @@ export const latest = [
     text: "Details about the parking",
     date: "November 15, 2024 10:23pm",
     status: "progress",
+    qrURL: "https://carpark.themall.co.th/?data=abe69da7b1a31",
   },
   {
     id: "3",
