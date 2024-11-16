@@ -1,25 +1,11 @@
 // SPDX-License-Identifier: BKK
 pragma solidity =0.8.28;
 
-error OnlyOwner(
-    address sender,
-    address owner
-);
+import {
+    Owner
+} from "./Owner.sol";
 
-contract EthParkQr {
-
-    address owner;
-
-    modifier onlyOwner() {
-        require(
-            msg.sender == owner,
-            OnlyOwner(
-                msg.sender,
-                owner
-            )
-        );
-        _;
-    }
+contract EthParkQr is Owner {
 
     struct OrderData {
         address token;

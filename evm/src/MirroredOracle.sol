@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: BKK
 pragma solidity =0.8.28;
 
-contract MirroredOracle {
-    address owner;
+import {
+    Owner
+} from "./Owner.sol";
 
-    modifier onlyOwner() {
-        require(
-            msg.sender == owner,
-            "OnlyOwner"
-        );
-        _;
-    }
+contract MirroredOracle is Owner {
 
     function latestAnswer()
         external

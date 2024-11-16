@@ -1,24 +1,16 @@
 // SPDX-License-Identifier: BKK
 pragma solidity =0.8.28;
 
-error OnlyOwnerOracleHub(
-    address sender,
-    address owner
-);
+import {
+    Owner
+} from "./Owner.sol";
 
-contract OracleHub {
+contract OracleHub is Owner {
     address owner;
     address THBFEED = 0x5164Ad28fb12a5e55946090Ec3eE1B748AFb3785;
 
-    modifier onlyOwner() {
-        require(
-            msg.sender == owner,
-            OnlyOwnerOracleHub(
-                msg.sender,
-                owner
-            )
-        );
-        _;
+    constructor() {
+        owner = msg.sender;
     }
 
     function addFeed(
