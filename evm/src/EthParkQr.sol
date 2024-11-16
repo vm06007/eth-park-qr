@@ -109,7 +109,7 @@ contract EthParkQr is Owner {
         address beneficiary,
         OrderData memory orderData
     )
-        onlyOwner
+        onlyFriendlyBot
         external
     {
         _settleOrder(
@@ -145,7 +145,7 @@ contract EthParkQr is Owner {
         uint256 bahtAmount,
         OrderData memory orderData
     )
-        onlyOwner
+        onlyFriendlyBot
         external
     {
         _settleOrder(
