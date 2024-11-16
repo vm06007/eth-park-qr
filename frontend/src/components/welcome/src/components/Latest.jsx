@@ -114,17 +114,27 @@ const Latest = () => {
       );
 
       const recentEvents = await Promise.all(
-        events.slice(-5).map(async (event, i) => {
-          const blockDetails = await provider.getBlock(event.blockNumber);
         events.slice(-6).map(async (event, i) => {
+          const blockDetails = await provider.getBlock(
+            event.blockNumber
+          );
+
           const date = new Date(blockDetails.timestamp * 1000).toLocaleString();
 
+          let paid = "awaiting";
+          if (i > 0) {
             paid = "done";
+          }
           return {
             id: event.transactionHash,
             date,
+            // from: event.args.from,
+            // to: event.args.to,
+            // value: ethers.utils.formatEther(event.args.value),
             title: latest[i] && latest[i].title,
-            status: "done",
+            qrURL: latest[i] && latest[i].qrURL,
+            // text: `From: ${event.args.from} To: ${event.args.to} Amount: ${ethers.utils.formatEther(event.args.value)}`,
+            status: paid,
             txHash: event.transactionHash,
           };
         })
