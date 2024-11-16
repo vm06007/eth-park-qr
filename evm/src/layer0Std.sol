@@ -6,18 +6,23 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { RoundInfoContract } from "./RoundInfoContract.sol";
 
-contract MyOApp is OApp {
-    constructor(address _endpoint, address _owner) OApp(_endpoint, _owner) Ownable(_owner) {}
+contract MyOapp is OApp, RoundInfoContract {
 
-    // Some arbitrary data you want to deliver to the destination chain!
-    string public data;
+    constructor(
+        address _endpoint,
+        address _owner
+    )
+    OApp(
+        _endpoint,
+        _owner
+    )
+    Ownable(
+        _owner
+    )
+    {
 
-    /**
-     * @notice Sends a message from the source to destination chain.
-     * @param _dstEid Destination chain's endpoint ID.
-     * @param _message The message to send.
-     * @param _options Message execution options (e.g., for sending gas to destination).
-     */
+    }
+
     function send(
         uint32 _dstEid,
         string memory _message,
