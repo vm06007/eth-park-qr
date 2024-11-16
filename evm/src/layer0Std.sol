@@ -77,15 +77,15 @@ contract MyOapp is OApp, RoundInfoContract {
 
     function send(
         uint32 _dstEid,
-        string memory _message,
+        bytes memory _message,
         bytes calldata _options
-    ) external payable {
-        // Encodes the message before invoking _lzSend.
-        // Replace with whatever data you want to send!
-        bytes memory _payload = abi.encode(_message);
+    )
+        external
+        payable
+    {
         _lzSend(
             _dstEid,
-            _payload,
+            _message,
             _options,
             // Fee in native gas and ZRO token.
             MessagingFee(msg.value, 0),
