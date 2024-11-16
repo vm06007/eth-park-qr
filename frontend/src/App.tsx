@@ -10,8 +10,8 @@ function App() {
     <Router>
       <main className="min-h-screen flex flex-col justify-between">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/old" element={<Home />} />
+          <Route path="/" element={<Welcome />} />
         </Routes>
         <Footer />
         <Toaster />
