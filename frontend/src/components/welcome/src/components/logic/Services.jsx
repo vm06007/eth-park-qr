@@ -157,27 +157,48 @@ export const PaymentHandler = ({ data, scan, api }) => {
     return thbInEth;
   };
 
+  // send a bit more to cover for sure, unused amount returned (refunded)
   const amountInPol = calculatePolAmount(amount) * 1.10;
-  const amountInKub = calculateKubAmount(amount);
-  const amountInEth = calculateEthAmount(amount);
+  const amountInKub = calculateKubAmount(amount) * 1.10;
+  const amountInEth = calculateEthAmount(amount) * 1.10;
 
   const { writeContractAsync } = useWriteContract();
 
   const payForParking = async (
     amount
   ) => {
-    const amountFull = ethers.utils.parseUnits(amount.toString(), 'ether')
-    const amountFullString = amountFull.toString();
-    console.log(amountFullString, 'amountFullString');
+    const amountFull = ethers.utils.parseUnits(
+      amount.toString(),
+      'ether'
+    )
+
     isCreatingOrder = true;
+
     const args = [
       "https://carpark.themall.co.th/?data=", // _baseUrl
       scan, // _referenceString
       amountFull, // bahtAmount
     ];
-    const value = ethers.utils.parseUnits(amountInPol.toString(), 'ether');
-    console.log(args, 'args');
-    console.log(value, 'value');
+
+    console.log(amountInEth, 'amountInEth');
+
+    const decimals = 18; // Token decimals (usually 18 for ERC-20 tokens)
+
+    const amountRounded = chain?.id === 137
+      ? amountInPol.toFixed(decimals)
+      : amountInEth.toFixed(decimals);
+
+    const amountTrue = ethers.utils.parseUnits(
+      amountRounded,
+      'ether'
+    );
+
+    const value = amountTrue;
+
+    const contractAddress = chain?.id === 137
+      ? "0x1fC490c7FD8716A9d20232B6871951e674841b4a"
+      : "0xd366f36a2bDaE5F7Be8b4c6c64BF8BA9Cf3b7099";
+
     try {
       setLoading(true);
       const txHash = await writeContractAsync({
