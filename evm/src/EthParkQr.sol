@@ -5,6 +5,10 @@ import {
     Owner
 } from "./Owner.sol";
 
+import {
+    IERC20
+} from "./interfaces/IERC20.sol";
+
 contract EthParkQr is Owner {
 
     address ZERO_ADDRESS = address(0);
