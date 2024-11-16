@@ -40,6 +40,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
 
   const [kubThbPrice, setKubThbPrice] = useState(null);
   const [polThbPrice, setPolThbPrice] = useState(null);
+  const [ethThbPrice, setEthThbPrice] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
   const [loading, setLoading] = useState(false);
   const [transactionHash, setTransactionHash] = useState(null);
@@ -115,6 +116,9 @@ export const PaymentHandler = ({ data, scan, api }) => {
         setPolThbPrice(
           response.data.THB_POL.last
         );
+        setEthThbPrice(
+          response.data.THB_ETH.last
+        )
       } catch (error) {
         console.info("Failed to fetch price data:", error);
       }
@@ -143,8 +147,19 @@ export const PaymentHandler = ({ data, scan, api }) => {
     return thbInPol;
   };
 
+  const calculateEthAmount = (thbAmount) => {
+    if (!ethThbPrice) {
+      console.info("Missing required price data: POL/ETH.");
+      return 0;
+    }
+
+    const thbInEth = thbAmount / ethThbPrice; // Convert THB to ETH
+    return thbInEth;
+  };
+
   const amountInPol = calculatePolAmount(amount) * 1.10;
   const amountInKub = calculateKubAmount(amount);
+  const amountInEth = calculateEthAmount(amount);
 
   const { writeContractAsync } = useWriteContract();
 
@@ -304,7 +319,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
       </ul>
       {data && (
         <div className="px-5 mt-2 relative">
-          {(chain?.id === 1 || chain?.id === 137) ? (
+          {(chain?.id === 1 || chain?.id === 137 || chain?.id === 42161) ? (
             <button
               onClick={() => {
                 // setActiveTab(3);
@@ -314,14 +329,19 @@ export const PaymentHandler = ({ data, scan, api }) => {
               className={`w-full mt-6 py-3 px-4 rounded text-white font-bold ${
                 chain?.id === 1
                   ? 'bg-green-500 hover:bg-green-700'
-                  : 'bg-purple-500 hover:bg-purple-700'
+                  : chain?.id === 42161
+                    ? 'bg-blue-500 hover:bg-blue-700'
+                    : 'bg-purple-500 hover:bg-purple-700'
               }`}
             >
               {loading
                 ? 'Processing...'
                 : chain?.id === 1
-                ? `Pay ${amount.toFixed(2)} THB with ${amountInKub.toFixed(4)} KUB`
-                : `Pay ${amountInPol.toFixed(4)} POL`}
+                  ? `Pay ${amount.toFixed(2)} THB with ${amountInKub.toFixed(4)} KUB`
+                  : chain?.id === 42161
+                    ? `Pay ${amountInEth.toFixed(4)} ETH`
+                    : `Pay ${amountInPol.toFixed(4)} POL`
+              }
             </button>
           ) : (
             <Checkout

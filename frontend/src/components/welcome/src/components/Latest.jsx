@@ -9,17 +9,21 @@ import QRCode from 'react-qr-code';
 import { check, grid, loading1, gradient } from "../assets";
 
 const contracts = {
-  1: { // Ethereum Mainnet (USDC contract)
+  1: {
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     explorer: "https://eth.blockscout.com/",
   },
-  137: { // Polygon Mainnet (Actual PayQRContract)
+  137: {
     address: "0x1fC490c7FD8716A9d20232B6871951e674841b4a",
     explorer: "https://polygon.blockscout.com/",
   },
-  8453: { // Base Mainnet (USDC contract)
+  8453: {
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     explorer: "https://base.blockscout.com/",
+  },
+  42161: {
+    address: "0xd366f36a2bDaE5F7Be8b4c6c64BF8BA9Cf3b7099",
+    explorer: "https://arbitrum.blockscout.com/",
   },
 };
 
