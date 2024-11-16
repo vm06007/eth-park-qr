@@ -115,8 +115,7 @@ contract EthParkQr is Owner {
     function settleOrderNative(
         address beneficiary,
         uint256 bahtAmount,
-        string memory _baseUrl,
-        string memory _referenceString
+        OrderData memory orderData
     )
         onlyOwner
         external
