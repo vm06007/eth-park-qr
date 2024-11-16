@@ -114,7 +114,7 @@ const Latest = () => {
           };
         })
       );
-      console.log(recentEvents, 'recentEvents');
+      // console.log(recentEvents, 'recentEvents');
       setLatestEvents(recentEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -127,7 +127,7 @@ const Latest = () => {
     );
 
     const handleChainChanged = async () => {
-      await fetchChainId(provider);
+      // await fetchChainId(provider);
       await fetchEvents(provider, chain?.id);
     };
 
@@ -148,6 +148,11 @@ const Latest = () => {
   // Dynamically generate block explorer URL
   const explorerUrl = chain?.id && contracts[chain?.id]?.explorer
     ? `${contracts[chain?.id].explorer}/address/${contracts[chain?.id].address}`
+    : "#";
+
+  // Dynamically generate block explorer URL
+  const explorerUrlAddy = chain?.id && contracts[chain?.id]?.explorer
+    ? `${contracts[chain?.id].explorer}/address/}`
     : "#";
 
     const explorerUrlTx = chain?.id && contracts[chain?.id]?.explorer
