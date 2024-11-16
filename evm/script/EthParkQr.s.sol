@@ -12,7 +12,7 @@ contract EthParkQrScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        ethParkQr = new EthParkQr();
+       // ethParkQr = new EthParkQr();
 
         vm.stopBroadcast();
     }
