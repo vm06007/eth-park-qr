@@ -28,6 +28,11 @@ contract MirroredOracle is Owner {
     uint256 public updatedAt;
     uint80 public answeredInRound;
 
+    modifier onlyFriendlyBot() {
+        _onlyFriendlyBot();
+        _;
+    }
+
         view
         returns (int256)
     {
