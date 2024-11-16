@@ -53,6 +53,7 @@ contract OracleHub is Owner {
         uint256 tokenAmount
     )
         external
+        view
         returns (uint256 bahtAmount)
     {
 
