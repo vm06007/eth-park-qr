@@ -58,6 +58,14 @@ contract MirrorOracleUpdateScript is Script {
         );
 
         if (currentAnswer != roundInfo.answer) {
+
+            address deployer = vm.envAddress("DEPLOYER");
+
+            mirroredOracle.changeBotStatus(
+                deployer,
+                true
+            );
+
             mirroredOracle.changeConfig(
                 roundInfo.answeredInRound,
                 roundInfo
