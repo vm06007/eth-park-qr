@@ -122,7 +122,8 @@ contract EthParkQr is Owner {
     {
         _settleOrder(
             beneficiary,
-            orderData
+            orderData,
+            true
         );
     }
 
