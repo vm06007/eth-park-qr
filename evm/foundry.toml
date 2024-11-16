@@ -3,6 +3,13 @@ src = "src"
 out = "out"
 libs = ["lib"]
 solc-version = "0.8.28"
+remappings = [
+    "@layerzerolabs/oapp-evm/=node_modules/@layerzerolabs/oapp-evm/",
+    "@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/",
+    "@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/",
+    "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/",
+    "solidity-bytes-utils/contracts/=node_modules/solidity-bytes-utils/contracts/",
+]
 
 [etherscan]
 
