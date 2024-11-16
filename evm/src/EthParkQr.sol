@@ -150,7 +150,7 @@ contract EthParkQr is Owner {
 
         Amounts storage data = amountsFromOrder[orderDataHash];
 
-        tokenAmount = oracleHub.getTokenEquivalent(
+        tokenAmount = ORACLE_HUB_INSTANCE.getTokenEquivalent(
             _token,
             _bahtAmount
         );
