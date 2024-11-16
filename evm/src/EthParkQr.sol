@@ -100,7 +100,16 @@ contract EthParkQr is Owner {
     )
         internal
     {
+        uint256 bahtAmount = orderData.bahtAmount;
+        string memory _baseUrl = orderData.baseUrl;
+        string memory _referenceString = orderData.referenceString;
 
+        address actualAddress = _isNative ? NATIVE : orderData.token;
+
+        uint256 neededAmount = ORACLE_HUB_INSTANCE.getTokenAmount(
+            actualAddress,
+            bahtAmount
+        );
     }
 
     function settleOrderNative(
