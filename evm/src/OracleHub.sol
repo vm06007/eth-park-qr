@@ -16,8 +16,11 @@ contract OracleHub is Owner {
     address public thbUsdPriceFeedAddress;
     address public constant NATIVE = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-    constructor() {
-
+    constructor(
+        address _thbUsdPriceFeedAddress
+    )
+    {
+        thbUsdPriceFeedAddress = _thbUsdPriceFeedAddress;
     }
 
     function getLatestPrice(
