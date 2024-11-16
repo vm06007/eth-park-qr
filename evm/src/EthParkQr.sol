@@ -129,19 +129,6 @@ contract EthParkQr is Owner {
     )
         internal
     {
-        uint256 getTokenAmountFromBaht = ORACLE_HUB_INSTANCE.getTokenAmount(
-            token,
-            bahtAmount
-        );
-
-        OrderData memory orderData = OrderData(
-            token,
-            bahtAmount,
-            getTokenAmountFromBaht,
-            _baseUrl,
-            _referenceString
-        );
-
         IERC20(token).transferFrom(
             msg.sender,
             address(this),
