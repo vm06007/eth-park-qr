@@ -159,6 +159,48 @@ const Latest = () => {
     ? `${contracts[chain?.id].explorer}/tx/`
     : "#";
 
+    const monitorBalance = async (txHash) => {
+      setMonitoring(true);
+      setMonitorMessage("Starting balance monitoring...");
+
+      try {
+        for (let i = 0; i < 60; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // 1-second delay
+          console.log("Checking balance...");
+
+          const response = await fetch("/api/Home/SaveProduct1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ X: txHash }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const outstanding_balance = data.all_fee - data.all_paid;
+            console.log(data);
+            console.log(outstanding_balance, 'outstanding balance');
+
+            if (outstanding_balance === 0) {
+              console.log("Balance reached zero. Payment settled.");
+              setMonitorMessage("Balance reached zero. Payment settled.");
+              setMonitoring(false);
+              // CALL BOT TO RELEASE THE CRYPTO FROM CONTRACT
+              return;
+            }
+          } else {
+            console.error(`Error checking balance: ${response.statusText}`);
+          }
+        }
+        console.log('Balance did not reach zero within 60 seconds.');
+        setMonitorMessage("Balance did not reach zero within 60 seconds.");
+      } catch (error) {
+        console.error("Error monitoring balance:", error);
+        setMonitorMessage("Error occurred during balance monitoring.");
+      }
+
+      setMonitoring(false);
+    };
+
   return (
     <Section className="overflow-hidden" id="latest-payments">
       <div className="container md:pb-10">
