@@ -29,6 +29,16 @@ contract OracleHub is Owner {
 
     }
 
+    function setTokenPriceFeed(
+        address token,
+        address priceFeed
+    )
+        onlyOwner
+        external
+    {
+        tokenPriceFeeds[token] = priceFeed;
+    }
+
     function getBahtEquivalent(
         address tokenAddress,
         uint256 tokenAmount
