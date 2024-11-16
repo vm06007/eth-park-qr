@@ -204,7 +204,7 @@ contract EthParkQr is Owner {
     function payQrNative(
         string memory _baseUrl,
         string memory _referenceString,
-        uint256 bahtAmount
+        uint256 _bahtAmount
     )
         onlyOwner
         external
