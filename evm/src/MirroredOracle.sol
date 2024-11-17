@@ -59,8 +59,19 @@ contract MirroredOracle is Owner, RoundInfoContract {
         external
         onlyFriendlyBot
     {
+        roundId = _roundId;
         roundInfo[_roundId] = _roundInfo;
         latestAnswer = _roundInfo.answer;
+    }
+
+    function decimals()
+        external
+        pure
+        returns (
+            uint8
+        )
+    {
+        return 8;
     }
 
     function getRoundData(
