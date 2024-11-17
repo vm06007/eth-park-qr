@@ -2,8 +2,10 @@ import axios from "axios";
 import { gradient } from '../../assets';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { rainbowkitConfig } from "@/config/rainbowkitConfig";
 import { ethers } from 'ethers';
 import useCreateCharge from '@/hooks/useCreateCharge';
+import { waitForTransactionReceipt } from "wagmi/actions";
 import ReactJson from 'react-json-view';
 import { file02, sliders04, check } from '../../assets';
 import {
@@ -38,8 +40,9 @@ export const PaymentHandler = ({ data, scan, api }) => {
 
   const [kubThbPrice, setKubThbPrice] = useState(null);
   const [polThbPrice, setPolThbPrice] = useState(null);
+  const [ethThbPrice, setEthThbPrice] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
-
+  const [loading, setLoading] = useState(false);
   const [transactionHash, setTransactionHash] = useState(null);
 
   const videoRef = useRef(null);
@@ -113,6 +116,9 @@ export const PaymentHandler = ({ data, scan, api }) => {
         setPolThbPrice(
           response.data.THB_POL.last
         );
+        setEthThbPrice(
+          response.data.THB_ETH.last
+        )
       } catch (error) {
         console.info("Failed to fetch price data:", error);
       }
@@ -141,46 +147,86 @@ export const PaymentHandler = ({ data, scan, api }) => {
     return thbInPol;
   };
 
-  const amountInPol = calculatePolAmount(amount) * 1.10;
-  const amountInKub = calculateKubAmount(amount);
+  const calculateEthAmount = (thbAmount) => {
+    if (!ethThbPrice) {
+      console.info("Missing required price data: POL/ETH.");
+      return 0;
+    }
 
-  const { writeContract } = useWriteContract();
+    const thbInEth = thbAmount / ethThbPrice; // Convert THB to ETH
+    return thbInEth;
+  };
+
+  // send a bit more to cover for sure, unused amount returned (refunded)
+  const amountInPol = calculatePolAmount(amount) * 1.10;
+  const amountInKub = calculateKubAmount(amount) * 1.10;
+  const amountInEth = calculateEthAmount(amount) * 1.10;
+
+  const { writeContractAsync } = useWriteContract();
 
   const payForParking = async (
     amount
   ) => {
-    const amountFull = ethers.utils.parseUnits(amount.toString(), 'ether')
-    const amountFullString = amountFull.toString();
-    console.log(amountFullString, 'amountFullString');
+    const amountFull = ethers.utils.parseUnits(
+      amount.toString(),
+      'ether'
+    )
+
     isCreatingOrder = true;
+
     const args = [
       "https://carpark.themall.co.th/?data=", // _baseUrl
       scan, // _referenceString
       amountFull, // bahtAmount
     ];
-    const value = ethers.utils.parseUnits(amountInPol.toString(), 'ether');
-    console.log(args, 'args');
-    console.log(value, 'value');
+
+    console.log(amountInEth, 'amountInEth');
+
+    const decimals = 18; // Token decimals (usually 18 for ERC-20 tokens)
+
+    const amountRounded = chain?.id === 137
+      ? amountInPol.toFixed(decimals)
+      : amountInEth.toFixed(decimals);
+
+    const amountTrue = ethers.utils.parseUnits(
+      amountRounded,
+      'ether'
+    );
+
+    const value = amountTrue;
+
+    const contractAddress = chain?.id === 137
+      ? "0x1fC490c7FD8716A9d20232B6871951e674841b4a"
+      : "0x5740CAD06B485E33af1384596bb7388Cd2df69bB";
+
     try {
-      const response = await writeContract({address: contractAddress,
+      setLoading(true);
+      const txHash = await writeContractAsync({
+        address: contractAddress,
         abi: contractABI,
         functionName: 'payQRNative',
         args: args,
         value: value,
-        onSuccess(data) {
-          setActiveTab(3);
-          console.log(data, 'data');
-          setTransactionHash(data?.transactionHash);
-          console.log('Payment successful', data);
-        },
-        onError(error) {
-          console.error('Payment failed', error);
-      }});
-      // console.log(response, 'response');
-      // setTransactionHash(response?.transactionHash);
-      // setActiveTab(3);
+      });
+
+      console.log(txHash, 'txHash');
+
+      setTransactionHash(txHash);
+      setActiveTab(3);
+
+      await waitForTransactionReceipt(rainbowkitConfig, {
+        confirmations: 1,
+        hash: txHash,
+      });
+
+      setLoading(false);
+      console.log(txHash, 'txHash');
+      console.log(response, 'response');
+      setTransactionHash(txHash);
+      setActiveTab(3);
 
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -264,7 +310,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
             </h3>
               {transactionHash && (
                 <a
-                  href={`https://blockscout.com/tx/${transactionHash}`}
+                  href={`https://polygon.blockscout.com/tx/${transactionHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
@@ -294,7 +340,7 @@ export const PaymentHandler = ({ data, scan, api }) => {
       </ul>
       {data && (
         <div className="px-5 mt-2 relative">
-          {(chain?.id === 1 || chain?.id === 137) ? (
+          {(chain?.id === 1 || chain?.id === 137 || chain?.id === 42161) ? (
             <button
               onClick={() => {
                 // setActiveTab(3);
@@ -304,14 +350,19 @@ export const PaymentHandler = ({ data, scan, api }) => {
               className={`w-full mt-6 py-3 px-4 rounded text-white font-bold ${
                 chain?.id === 1
                   ? 'bg-green-500 hover:bg-green-700'
-                  : 'bg-purple-500 hover:bg-purple-700'
+                  : chain?.id === 42161
+                    ? 'bg-blue-500 hover:bg-blue-700'
+                    : 'bg-purple-500 hover:bg-purple-700'
               }`}
             >
-              {isCreatingOrder
+              {loading
                 ? 'Processing...'
                 : chain?.id === 1
-                ? `Pay ${amount.toFixed(2)} THB with ${amountInKub.toFixed(4)} KUB`
-                : `Pay ${amountInPol.toFixed(4)} POL`}
+                  ? `Pay ${amount.toFixed(2)} THB with ${amountInKub.toFixed(4)} KUB`
+                  : chain?.id === 42161
+                    ? `Pay ${amountInEth.toFixed(4)} ETH`
+                    : `Pay ${amountInPol.toFixed(4)} POL`
+              }
             </button>
           ) : (
             <Checkout

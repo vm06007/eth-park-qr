@@ -8,7 +8,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { base } from 'wagmi/chains';
 import { type ReactNode, useState } from 'react';
 import { type State } from 'wagmi';
-import { mainnet, polygon } from "wagmi/chains";
+import { mainnet, polygon, arbitrum } from "wagmi/chains";
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { toPrivyWallet } from '@privy-io/cross-app-connect';
 
@@ -34,7 +34,7 @@ function getConfig() {
   );
 
   return createConfig({
-    chains: [base, mainnet, polygon],
+    chains: [base, mainnet, polygon, arbitrum],
     connectors: [
       coinbaseWallet({
         appName: 'OnchainKit',
@@ -48,6 +48,7 @@ function getConfig() {
     }),
     ssr: true,
     transports: {
+      [arbitrum.id]: http(),
       [mainnet.id]: http(),
       [polygon.id]: http(),
       [base.id]: http(),

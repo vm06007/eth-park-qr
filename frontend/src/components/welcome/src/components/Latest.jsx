@@ -9,17 +9,21 @@ import QRCode from 'react-qr-code';
 import { check, grid, loading1, gradient } from "../assets";
 
 const contracts = {
-  1: { // Ethereum Mainnet (USDC contract)
+  1: {
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     explorer: "https://eth.blockscout.com/",
   },
-  137: { // Polygon Mainnet (Actual PayQRContract)
+  137: {
     address: "0x1fC490c7FD8716A9d20232B6871951e674841b4a",
     explorer: "https://polygon.blockscout.com/",
   },
-  8453: { // Base Mainnet (USDC contract)
+  8453: {
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     explorer: "https://base.blockscout.com/",
+  },
+  42161: {
+    address: "0x5740CAD06B485E33af1384596bb7388Cd2df69bB",
+    explorer: "https://arbitrum.blockscout.com/",
   },
 };
 
@@ -94,6 +98,7 @@ const Latest = () => {
   const [monitoring, setMonitoring] = useState(false);
   const [monitorMessage, setMonitorMessage] = useState("");
   const [countdown, setCountdown] = useState(seconds);
+  const [trigger, setTrigger] = useState(false);
   let diff = 0;
 
   const {
@@ -139,16 +144,22 @@ const Latest = () => {
       );
       // const block = await provider.getBlockNumber();
       // Fetch the latest PaymentUpdated events
+
+      const fromBlock = chainId === 137
+        ? 64371440
+        : 275213706;
+
       const events = await contract.queryFilter(
         contract.filters.PaymentUpdated(),
-        64357300, // from
+        fromBlock, // from
         'latest' // to
       );
 
       console.log(events, 'events');
 
       const recentEvents = await Promise.all(
-        events.slice(-6).reverse().map(async (event, i) => {
+        events.slice(-5).reverse().map(async (event, i) => {
+
           const blockDetails = await provider.getBlock(
             event.blockNumber
           );
@@ -198,31 +209,69 @@ const Latest = () => {
   };
 
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(
-      window.ethereum
-    );
+    let provider;
 
-    const handleChainChanged = async () => {
-      // await fetchChainId(provider);
-      await fetchEvents(
-        provider,
-        chain?.id
-      );
-    };
+    try {
+      if (window.ethereum) {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+      } else {
+        console.warn("No wallet detected. Using a fallback provider.");
+        // Use a fallback read-only provider
+        provider = new ethers.providers.JsonRpcProvider(
+          "https://polygon-mainnet.infura.io/v3/<YourKey>"
+        );
+      }
 
-    window.ethereum.on("chainChanged", handleChainChanged);
+      const handleChainChanged = async () => {
+        try {
+          await fetchEvents(provider, chain?.id);
+        } catch (error) {
+          console.error("Error handling chain change:", error);
+        }
+      };
 
-    return () => {
-      window.ethereum.removeListener("chainChanged", handleChainChanged);
-    };
+      // Listen for chain changes
+      if (window.ethereum) {
+        window.ethereum.on("chainChanged", handleChainChanged);
+      }
+
+      // Cleanup the event listener on unmount
+      return () => {
+        if (window.ethereum) {
+          window.ethereum.removeListener("chainChanged", handleChainChanged);
+        }
+      };
+    } catch (error) {
+      console.error("Failed to initialize provider:", error);
+    }
   }, [chain?.id]);
+
 
   useEffect(() => {
     if (chain?.id) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      fetchEvents(provider, chain?.id);
+      let provider;
+
+      try {
+        if (window.ethereum) {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+        } else {
+          console.warn("No wallet detected. Using a fallback provider.");
+          // Use a fallback read-only provider
+          provider = new ethers.providers.JsonRpcProvider(
+            "https://polygon-mainnet.infura.io/v3/<YourKey>"
+          );
+        }
+
+        fetchEvents(provider, chain?.id);
+      } catch (error) {
+        console.error("Failed to initialize provider:", error);
+      }
     }
-  }, [chain?.id]);
+  }, [chain?.id, trigger]);
+
+  const toggleTrigger = () => {
+    setTrigger((prev) => !prev);
+  };
 
   // Dynamically generate block explorer URL
   const explorerUrl = chain?.id && contracts[chain?.id]?.explorer
@@ -237,7 +286,7 @@ const Latest = () => {
 
       setCountdown(seconds);
       setMonitoring(true);
-      setMonitorMessage(`Starting balance monitoring... If settled you will receive ${diff} `);
+      setMonitorMessage(`Starting balance monitoring...`);
 
       try {
         for (let i = 0; i < seconds; i++) {
@@ -317,7 +366,7 @@ const Latest = () => {
 
   return (
     <Section className="overflow-hidden" id="latest-payments">
-      <div className="container md:pb-10">
+      <div className="container md:pb-10" onClick={() => {toggleTrigger()}}>
         <Heading tag="check it on-chain" title="Latest Payments" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {latestEvents.map((item, i) => (
@@ -409,12 +458,12 @@ const Latest = () => {
                         <br></br>
                         <div className="flex" style={{flexDirection: "row-reverse"}}>
                         <span className="counter">
-                          <a href="https://carpark.themall.co.th/?data=abe69da7b1a31" target="_blank">
+                          <a href={`https://carpark.themall.co.th/?data=${item.orderId}`} target="_blank">
                             Scan To Settle In {countdown} seconds
                           </a>
                         </span>
                         {(item.qrURL) && (
-                          <QRCode value={item.qrURL} />
+                          <QRCode value={`https://carpark.themall.co.th/?data=${item.orderId}`} />
                         )}
                         </div>
                         <br></br>

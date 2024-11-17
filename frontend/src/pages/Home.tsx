@@ -1,6 +1,5 @@
 import InfiniteScroll from "@/components/home/InfiniteScroll";
 import Starters from "@/components/home/Starters";
-import { Scanner } from '@yudiel/react-qr-scanner';
 import Navbar from "@/components/Navbar";
 
 export function Home() {
