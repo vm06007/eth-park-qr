@@ -28,6 +28,17 @@ body, html {
   cursor: -webkit-image-set(url(https://flowinkit.com/wp-content/uploads/2020/05/cursor-arrow.svg) 1x, url(https://flowinkit.com/wp-content/uploads/2021/01/cursor-arrow2x.svg) 2x) 0 0, pointer !important; /* Webkit */
 }
 
+.videocl {
+  z-index: 10;
+  position: relative;
+  top: -470px;
+  width: 895px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 60px;
+}
+
 button,
 .cursor-button,
 .eael-pricing-button,
